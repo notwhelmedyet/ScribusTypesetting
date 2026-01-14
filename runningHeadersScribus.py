@@ -5,7 +5,7 @@ For more details see the README.md
 Original (c) MIT 2024, ale rimoldi <ale@graphicslab.org>
 https://github.com/aoloe/scribus-script-repository/tree/master/headers_with_chapter_titles
 
-Edited by Lynn notwhelmedyet@gmail.com in 2025 to add paragraph style to the header, toggle header deletion & give dialogue options to set variables on run
+Edited by notwhelmedyet@gmail.com in 2026 to add paragraph style to the header, toggle header deletion & give dialogue options to set variables on run
 """
 
 try:
@@ -13,10 +13,8 @@ try:
 except ImportError:
 	pass
 
-
-HEADING_STYLE = 'AuthorName'
 HEADING_ITEM_PREFIX = 'Header'
-NEW_HEADING_STYLE = 'RunningHeader2' 
+NEW_HEADING_STYLE = 'RunningHeader' 
 DELETE = True
 PLACEMENT = 0
 
@@ -36,17 +34,19 @@ def get_master_pages_with_running_titles():
 def delete_all_heading_frames():
 	for page in range(1, scribus.pageCount() + 1):
 		scribus.gotoPage(page)
-		if page % 2 == 0:
-			for item in (item[0] for item in scribus.getPageItems() if item[1] == 4):
-				if item.startswith(HEADING_ITEM_PREFIX):
-					scribus.deleteObject(item)
+		#if page % 2 == 0:
+		for item in (item[0] for item in scribus.getPageItems() if item[1] == 4):
+			#result = scribus.messageBox ('Error', 'item is'+str(item)+" prefix found? "+str(item.find(HEADING_ITEM_PREFIX)),scribus.BUTTON_OK)
+			if item.find(HEADING_ITEM_PREFIX)>=0:
+				scribus.deleteObject(item)
 
 
-def get_first_h1_in_page(page):
+def get_first_h1_in_page(page, heading_style):
 	"""go through all paragraphs in all frames in page
 		and if there is an h1 paragraph style return its text."""
 	scribus.gotoPage(page)
-
+	HEADING_STYLE = heading_style
+	
 	# get the text and linked frames, sorted by the position on the page
 	page_text_frames = [(item[0], scribus.getPosition(item[0])) for item in scribus.getPageItems()
 		if item[1] == 4]
@@ -113,10 +113,11 @@ def main():
 			f'No style found with the name {HEADING_STYLE}',
 			icon=scribus.ICON_CRITICAL)
 		return
+		
 	#Set the style we want to use to style the running header content
 	NewHeadingStyle = scribus.valueDialog( "Set Up Running Headers" , "Enter the paragraph style to use for the new running headers (or type 1 to leave as default, RunningHeader)\n\nNote: this is case sensitive!" , "" )
 	if NewHeadingStyle == str(1):
-		NEW_HEADING_STYLE = 'RunningHeader2'
+		NEW_HEADING_STYLE = 'RunningHeader'
 	else:
 		NEW_HEADING_STYLE = NewHeadingStyle
 	if NEW_HEADING_STYLE not in scribus.getParagraphStyles():
@@ -126,6 +127,7 @@ def main():
 			f'No style found with the name {NEW_HEADING_STYLE}',
 			icon=scribus.ICON_CRITICAL)
 		return 
+	
 	#Set if this applies to left, right, or all pages    
 	HeadingStyle = scribus.valueDialog( "Set Up Running Headers" , "Enter 1, 2, or 3:\n1: Apply Running Headers to left-hand pages only\n2: Apply Running Headers to right-hand pages only\n3: Apply Running Headers to all applicable pages", "")
 	if HeadingStyle == str(1):
@@ -137,6 +139,7 @@ def main():
 	elif HeadingStyle == str(3):
 		Sides = 3
 		PLACEMENT = 1 #1 is code for alternating, place to outside
+	
 	#If there's text in the header (likely a page number), should we replace it, or put the new running header to the right or left?
 	HeadingStyle = scribus.valueDialog( "Set Up Running Headers" , "Enter 1, 2, or 3:\n1: Put running headers on the inside of the page relative to any text in the master page text frame \n2: Put running headers to the outside of the page relative to any text \n3: Ignore any text on the master page text frames", "")
 	if HeadingStyle == str(2): 
@@ -153,15 +156,17 @@ def main():
 	# TODO: it might be better to get both the first and last h1 on the page.
 	# the first for this page, the last (if different) for the following ones
 	for page in range(1, scribus.pageCount() + 1):
-		h1 = get_first_h1_in_page(page)
+		h1 = get_first_h1_in_page(page, HEADING_STYLE)
 		if h1 is not None:
 			current_h1 = h1
 		if current_h1 is None:
 			continue
 		#test if we're on the same side page as we selected for headers, only apply new header if so
 		if (Sides == 3) or (Sides == scribus.getPageType(page)): 
+			#result = scribus.messageBox ('Error', 'Sides is'+str(Sides)+" page type is "+str(scribus.getPageType(page)),scribus.BUTTON_OK)
 			master_page = scribus.getMasterPage(page)
 			if master_page not in master_pages:
+				#result = scribus.messageBox ('Error', 'master page not in master pages',scribus.BUTTON_OK)
 				continue
 			scribus.editMasterPage(master_page)
 			scribus.copyObjects([master_pages[master_page]])
