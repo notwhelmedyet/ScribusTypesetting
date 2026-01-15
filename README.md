@@ -3,7 +3,7 @@ To accompany my tutorial on using Scribus to typeset (primarily fanfiction sourc
 
 Finally moving off Google docs.
 
-## The Scripts
+## The Core Scripts
 1. importCleaner.py and importCleanerScribus.py
 	>These scripts read a html file downloaded from ao3 and apply header styles to various sections of the document so they can be easily converted to Scribus paragraph styles upon import. It saves a edited copy of the file as well as a log output that tracks potential issues. The script with the 'Scribus' suffix will run within Scribus, and allows you to set a number of variables at run-time. The other version runs on your command line using Python3.
 
@@ -24,18 +24,19 @@ Finally moving off Google docs.
 	>The script will assign html headers as follows:
     >* \<h1> Chapter title ornaments
     >* \<h6> Chapter number
-
-3. ResizeMarginsAndHeadersScribus.py
-	>Resizes text frames and moves them to align with the page margins. This script is intended to be used on book-style documents with automatic text frames after the size of the page or margins has been changed. The script was only tested with facing page layouts where the first page is on the right hand side and all pages have the same margins. Based on initial code by Blaze.
-4. textToFramesScribus.py
+3. textToFramesScribus.py
 	>Move certain text elements on the main margin-sized text frame into separate frames for the currently selected page.
 	>Will only work if you have text on the page using the styles ChapterTitle, ChapterNumber. Will move the first paragraph of text in the main frame (assumed to be the size of the page-margins) using those styles into text frames that contain the style name if they exist. If no matching text frame exists, the text is not moved.
 	>The script will also move the first letter of the style ChapterStart if there is a frame containing the name DropCap.
-5. runningHeadersScribus.py
+4. runningHeadersScribus.py
 	>This was built on [Ale's headers_with_chapter_titles script](https://github.com/aoloe/scribus-script-repository/tree/master/headers_with_chapter_titles). It finds text in a selected style (Author name, chapter title, chapter number etc.) and, for all pages assigned master page templates that have a frame name containing the word "Header", copies that frame to the page and places the author name, chapter title etc. in the frame. It continues to place that text until it encounters a new instance of the chosen style. Basically, it can automatically apply any per-chapter or per-work field to headers/footers/wherever you want to put these frames.
 
 	>I added in dialogue options within Scribus to set a number of extra variables: whether the script should delete previously created headers, whether the script should apply to left/right/both pages, the source style to search for the header text, a destination style to apply to the headers and whether to append text from the master page to the header.
-6. colors-to-layer.py & name-match-move-to-layer.py
+
+## Niche/Peripherally Useful Scripts
+1. ResizeMarginsAndHeadersScribus.py
+	>Resizes text frames and moves them to align with the page margins. This script is intended to be used on book-style documents with automatic text frames after the size of the page or margins has been changed. The script was only tested with facing page layouts where the first page is on the right hand side and all pages have the same margins. Based on initial code by Blaze.
+2. colors-to-layer.py & name-match-move-to-layer.py
 	>Two variants of [Ale's images-to-layer script](https://github.com/aoloe/scribus-script-repository/tree/master/images-to-layer) These scripts (in addition to the images-to-layer script) are useful for a highly specialized task: you did not use layers when making your file but then realize you want to export the text and images/colored elements/specific items in different files. Maybe you want to print text and images on separate printers to save color ink or to optimize quality by using a b&w laserjet for text. Maybe you want to offer someone an image-free version to save on printing costs. Either way, this will make it easier.
 
 	>* images-to-layer moves all images to a layer of your choice.
