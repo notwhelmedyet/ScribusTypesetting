@@ -43,6 +43,14 @@ Finally moving off Google docs.
 	>* colors-to-layer moves all objects that have a fill or line color which is anything besides black, white or none. It is greedy and also moves anything with a gradient or hatch fill, because for some reason the script thinks those things are aquamarine. It does not notice colored text.
 	>* name-match-move-to-layer looks at the currently selected object and moves all objects that have a name containing that object's name to a layer. This will really only work if you gave the object a unique name prior to copy and pasting it many times. But in that specific use-case it is very handy.
 
+## Experimental Scripts (need further testing)
+1. anthologyCleaner.py
+    > A variant of importCleanerScribus.py which can process a group of works sequentially and append them together into a combined Anthology.html document. This script must be run twice and all the source html files must be in the same directory. The first run will generate the list of works in a directory. The user then must manually open that list and put the works in the desired order. You can then run again to generate the anthology source document. Some differences from the regular importCleanerScribus.py:
+    >* Will separate metadata into its own file (AnthologyMeta.html)
+    >* Cannot handle source documents that are double spaced throughout, since that logic would have to then be applied to all the source documents
+
+    > This script is experimental. I have not tested all variable combinations and it might give weird results. Please let me know if you find any bugs. The script will work best on single-author anthologies, because you're less likely to have substantial formatting differences between the works
+
 ### Things I am Not: 
 * A professional programmer
 	* (I took a python class in college a decade ago)
