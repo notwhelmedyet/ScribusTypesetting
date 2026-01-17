@@ -42,6 +42,10 @@ Finally moving off Google docs.
 	>* images-to-layer moves all images to a layer of your choice.
 	>* colors-to-layer moves all objects that have a fill or line color which is anything besides black, white or none. It is greedy and also moves anything with a gradient or hatch fill, because for some reason the script thinks those things are aquamarine. It does not notice colored text.
 	>* name-match-move-to-layer looks at the currently selected object and moves all objects that have a name containing that object's name to a layer. This will really only work if you gave the object a unique name prior to copy and pasting it many times. But in that specific use-case it is very handy.
+3. renumberSplitPages.py
+    > Sometimes you have to split a book into multiple scribus files because it starts lagging. This is a script to adjust the page numbers of all those files so they count up sequentially file-to-file.  It also checks to make sure you have correct alternating left-right pages across files.
+
+    > This script should be run prior to renumbering any epilogues/appendix back-matter sections to your final document - the will correctly ignore any front-matter sections in document 1, but it assumes all subsequent documents have only 1 section. Other than that, run right before your final PDF export!
 
 ## Experimental Scripts (need further testing)
 1. anthologyCleaner.py
@@ -49,7 +53,7 @@ Finally moving off Google docs.
     >* Will separate metadata into its own file (AnthologyMeta.html)
     >* Cannot handle source documents that are double spaced throughout, since that logic would have to then be applied to all the source documents
 
-    > This script is experimental. I have not tested all variable combinations and it might give weird results. Please let me know if you find any bugs. The script will work best on single-author anthologies, because you're less likely to have substantial formatting differences between the works
+    > This script is experimental. I have not tested all variable combinations and it might give weird results. Please let me know if you find any bugs. The script will work best on single-author anthologies, because they're less likely to have substantial formatting differences between the works
 
 ### Things I am Not: 
 * A professional programmer

@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
 #  anthologyCleaner.py
 #  a program for cleaning up various spacing/italics/typographic quote issues in ao3 downloads for faster import into scribus. This script works on a directory of files which are intended to be appended together and typeset as an anthology. This script must be run within scribus.
 #  #  
@@ -13,7 +10,7 @@
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-"""
+
 
 import os.path
 import string
@@ -61,7 +58,7 @@ def main():
 	if mode==str(1):
 		basehtml = scribus.fileDialog('Select a source folder that contains your anthology works', isdir=True)
 		list_files = os.listdir(basehtml)
-		scribus.messageBox("message", "The selected directory is: "+str(list_files))
+		#scribus.messageBox("message", "The selected directory is: "+str(list_files))
 		writeName = basehtml+'/AnthologyEntries.txt'
 		
 		with open(writeName, mode='w', encoding='utf8') as f:
