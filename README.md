@@ -46,6 +46,9 @@ Finally moving off Google docs.
     > Sometimes you have to split a book into multiple scribus files because it starts lagging. This is a script to adjust the page numbers of all those files so they count up sequentially file-to-file.  It also checks to make sure you have correct alternating left-right pages across files.
 
     > This script should be run prior to renumbering any epilogues/appendix back-matter sections to your final document - the will correctly ignore any front-matter sections in document 1, but it assumes all subsequent documents have only 1 section. Other than that, run right before your final PDF export!
+4. styleTOC.py
+    > The default Scribus Table of Contents generator applies the same character style to the whole TOC. But what if you want the numbers (or chapter titles) to be styled differently? This script applies the character style of your choice to the first word(s) on each line (prior to the tab) on the selected page. Also optionally adds a tab as a prefix to each line for better tab alignment.
+
 
 ## Experimental Scripts (need further testing)
 1. anthologyCleaner.py
