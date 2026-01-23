@@ -3,9 +3,18 @@ To accompany my tutorial on using Scribus to typeset (primarily fanfiction sourc
 
 Finally moving off Google docs.
 
+### Things I am Not: 
+* A professional programmer
+	* (I took a python class in college a decade ago)
+	* I am aware that manually processing html with regex, which is how the importCleaner program runs, is a bad idea that will break if the html isn't formatted the way I expect. However, I do not plan to learn html parsing. The script works on current ao3 outputted HTML files and that is all it needs to do.
+* Capable of offering immediate tech support if you cannot make a script work.
+	* Sometimes I may be able to figure out why a script isn't doing what it should. Sometimes I might not. Debugging and kludging together scripts are two very different skills.
+* Scripts are not offered with any guarantee to their usefulness, code efficiency, etc. Always save a **copy** of your typeset before running any script. (The exception being the html processing scripts and the renumberSplitPages script, all of which create copies of the files they edit rather than work int he actual file)
+
+
 ## The Core Scripts
-1. importCleaner.py and importCleanerScribus.py
-	>These scripts read a html file downloaded from ao3 and apply header styles to various sections of the document so they can be easily converted to Scribus paragraph styles upon import. It saves a edited copy of the file as well as a log output that tracks potential issues. The script with the 'Scribus' suffix will run within Scribus, and allows you to set a number of variables at run-time. The other version runs on your command line using Python3.
+1. importCleanerScribus.py
+	>These scripts read a html file downloaded from ao3 and apply header styles to various sections of the document so they can be easily converted to Scribus paragraph styles upon import. It saves a edited copy of the file as well as a log output that tracks potential issues.
 
 	>The script will assign the following html headers for parts of the fic:
 	>* \<h1> Fic Title
@@ -13,13 +22,11 @@ Finally moving off Google docs.
 	>* \<h3> Chapter Start - first paragraph after chapter title
 	>* \<h4> Scene Start - first paragraph after a scene break
 	>* \<h5> Scene Break/Ornaments
-2. chapterNum.py & chapterNumScribus.py
+2. chapterNumScribus.py
 	>These scripts take a already-processed html file created by ImportCleaner and apply one of several changes:
 	>* Add chapter numbers (in chosen format) prior to chapter title
 	>* Replace chapter title with chapter numbers. If the chapters were not given titles within AO3 the default title will be 'Chapter One' etc.
 	>* Add a separate-style ornament either above or below chapter titles/numbers
-
-	> As with the ImportCleaner, the script with the Scribus suffix runs within Scribus and offers prompts to set variables at run-time.
 	
 	>The script will assign html headers as follows:
     >* \<h1> Chapter title ornaments
@@ -46,9 +53,12 @@ Finally moving off Google docs.
     > Sometimes you have to split a book into multiple scribus files because it starts lagging. This is a script to adjust the page numbers of all those files so they count up sequentially file-to-file.  It also checks to make sure you have correct alternating left-right pages across files.
 
     > This script should be run prior to renumbering any epilogues/appendix back-matter sections to your final document - the will correctly ignore any front-matter sections in document 1, but it assumes all subsequent documents have only 1 section. Other than that, run right before your final PDF export!
-4. styleTOC.py
-    > The default Scribus Table of Contents generator applies the same character style to the whole TOC. But what if you want the numbers (or chapter titles) to be styled differently? This script applies the character style of your choice to the first word(s) on each line (prior to the tab) on the selected page. Also optionally adds a tab as a prefix to each line for better tab alignment.
-
+4. setUpTOC.py
+    > This is a variant built on [Ale's table_of_contents script](https://github.com/aoloe/scribus-script-repository/tree/master/table_of_contents). It allows you to add attributes to the document listing all instances of your selected style, which Scribus can then use to generate a TOC.
+5. styleTOC.py
+    > The default Scribus Table of Contents generator applies the same paragraph style to the whole TOC. But what if you want the numbers (or chapter titles) to be styled differently? This script applies the character style of your choice to the first word(s) on each line (prior to the tab) on the selected page. Also optionally adds a tab as a prefix to each line for better tab alignment.
+6. chapNum.py and importCleaner.py
+    > Variants of the ChapNumScribus and importCleanerScribus scripts that run in the terminal with python 3, if you have that available. Allows you to set your default variables and keep using them without messing around with all the dialogues. Intended for users comfortable with the command line and ediitng scripts manually.
 
 ## Experimental Scripts (need further testing)
 1. anthologyCleaner.py
@@ -58,13 +68,6 @@ Finally moving off Google docs.
 
     > This script is experimental. I have not tested all variable combinations and it might give weird results. Please let me know if you find any bugs. The script will work best on single-author anthologies, because they're less likely to have substantial formatting differences between the works
 
-### Things I am Not: 
-* A professional programmer
-	* (I took a python class in college a decade ago)
-	* I am aware that manually processing html with regex, which is how the importCleaner program runs, is a bad idea that will break if the html isn't formatted the way I expect. However, I do not plan to learn html parsing. The script works on current ao3 outputted HTML files and that is all it needs to do.
-* Capable of offering immediate tech support if you cannot make a script work.
-	* Sometimes I may be able to figure out why a script isn't doing what it should. Sometimes I might not. Debugging and kludging together scripts are two very different skills.
-* Scripts are not offered with any guarantee to their usefulness, code efficiency, etc. Always save a **copy** of your typeset before running any script. (The exception being the html processing scripts, which don't edit any Scribus file and don't make any edits to the source html)
-
 ## The Templates
 Needs to be Filled Out, tldr they're shortcuts to set up some of the many styles you need to typeset a book with some sane default values.
+

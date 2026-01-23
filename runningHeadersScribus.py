@@ -25,7 +25,7 @@ def get_master_pages_with_running_titles():
 	for master_page in scribus.masterPageNames():
 		scribus.editMasterPage(master_page)
 		for item in (item[0] for item in scribus.getPageItems() if item[1] == 4):
-			if item.startswith(HEADING_ITEM_PREFIX):
+			if item.find(HEADING_ITEM_PREFIX)>=0:
 				master_pages[master_page] = item
 				break
 	scribus.closeMasterPage()

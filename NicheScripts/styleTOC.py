@@ -28,10 +28,10 @@ def main():
 	CharacterStyle = scribus.valueDialog( "Style TOC" , "This script will only work on the currently selected page.\n\nEnter the character style to apply to the first word(s) on each line, prior to the tab\n(or type 1 to leave as default, FancyTOC)\n\nNote: this is case sensitive!" , "" )
 	if CharacterStyle == str(1):
 		STYLE = 'FancyTOC'
-		scribus.messageBox('Style', "Style FancyTOC")
+		#scribus.messageBox('Style', "Style FancyTOC")
 	else:
 		STYLE = CharacterStyle
-		scribus.messageBox('Style', "Style "+str(CharacterStyle))
+		#scribus.messageBox('Style', "Style "+str(CharacterStyle))
 	if STYLE not in scribus.getCharStyles():
 		scribus.setRedraw(True)
 		scribus.messageBox(

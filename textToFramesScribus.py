@@ -1,9 +1,12 @@
 """move certain text elements on a page into separate frames.
-Will only work if you have text on the page using the styles ChapterTitle, ChapterNumber, and/or DropCap
+Will only work if you have text on the page using the styles ChapterTitle, ChapterNumber, and/or ChapterStart
 Will move the first instance of text in the main frame (assumed to be the size of the page-margins) using those styles
 into text frames that contain the style name if they exist. If no matching text frame exists, the text is not moved.
 
-For ChapterTitle and ChapterNumber, the entire paragraph is moved. For DropCap only the first letter is moved.
+For ChapterTitle and ChapterNumber, the entire paragraph is moved. 
+
+For DropCap, the first letter (or first two characters if the line begins with a quote) is moved to the DropCap text frame
+If a text frame DropQuote exists, any beginning quote mark will be moved to DropQuote
 
 
 """
@@ -17,17 +20,20 @@ def main():
 	replaceCAP = False
 	replaceTITLE = False
 	replaceNUMBER = False
+	replaceQUOTE = False
 	foundTITLE = False
 	foundNUMBER = False
 	foundBOXTITLE = False
 	foundBOXNUMBER = False
 	foundCAP = False
+	foundQUOTE = False
 	TITLE = ''
 	NUMBER = ''
 	BOXTITLE = ''
 	BOXNUMBER = ''
 	CAPITAL = ''
 	deleteLIST = []
+	QUOTELIST = ["“","”",'"',"‘","’","'"]
 
 	try:
 		scribus # pylint: disable=pointless-statement
@@ -51,12 +57,14 @@ def main():
 	
 	#if text frames matching chosen styles exist, set flag to move them
 	for item, _ in page_text_frames:
-		if item.find('DropCapital')>=0:
+		if item.find('DropCap')>=0:
 			replaceCAP = True
 		elif item.find('ChapterTitle')>=0:
 			replaceTITLE = True
 		elif item.find('ChapterNumber')>=0:
 			replaceNUMBER = True
+		elif item.find('DropQuote')>=0:
+			replaceQUOTE = True		
 
 	for item, _ in page_text_frames:
 		scribus.deselectAll()
@@ -93,8 +101,21 @@ def main():
 						if foundCAP == False:
 							if p_style == 'ChapterStart':
 								foundCAP = True
-								CAPITAL = p[0]
-								coordinates = (start, 1)
+								result = scribus.messageBox ('Error', 'found chapter start p0 is'+str(p[0]),scribus.BUTTON_OK)
+								if p[0] in QUOTELIST:
+									if replaceQUOTE == True:
+										result = scribus.messageBox ('Error', 'found quote and repalce quote true',scribus.BUTTON_OK)
+										foundQUOTE = True
+										QUOTE = p[0]
+										CAPITAL = p[1]
+									else:
+										result = scribus.messageBox ('Error', 'found quote and repalce quote false',scribus.BUTTON_OK)
+										CAPITAL = p[0:2]
+									coordinates = (start, 2)
+								else:
+									result = scribus.messageBox ('Error', 'did not find quote',scribus.BUTTON_OK)
+									CAPITAL = p[0]
+									coordinates = (start, 1)
 								deleteLIST.insert(0, coordinates)
 				start += len(p) + 1 #set start to the start of the next paragraph
 			#after we find all, go through the page from bottom to top and delete marked text
@@ -116,7 +137,15 @@ def main():
 			if foundCAP == True:
 				scribus.insertText(CAPITAL, 0, item)
 				scribus.setParagraphStyle("DropCap", item)		
-	
+		elif item.find('DropQuote')>=0:
+			if foundQUOTE == True:
+				scribus.insertText(QUOTE, 0, item)
+				if "DropQuote" in scribus.getParagraphStyles():
+					scribus.setParagraphStyle("DropQuote", item)		
+				else:
+					scribus.setParagraphStyle("ChapterStart", item)	
+		scribus.layoutText(item)
+		
 	scribus.deselectAll()
 	scribus.gotoPage(current_page)
 	scribus.setRedraw(True)
