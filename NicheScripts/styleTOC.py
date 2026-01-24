@@ -35,7 +35,6 @@ def main():
 		RANGE = scribus.valueDialog( "Style TOC" , "Do you want to style part of each line with a character style?\n\nEnter 1 to style text before the tab\nEnter 2 to style text after the tab\nEnter 0 to not style any text", "")
 		if RANGE.find("0")>=0:
 			STYLE_TEXT = False
-			scribus.messageBox('Style', "Range == 0, style text = "+str(STYLE_TEXT))
 		if RANGE.find("1")>=0:
 			STYLE_FIRST = True
 		if RANGE.find("2")>=0:
@@ -47,7 +46,6 @@ def main():
 		RANGE = scribus.valueDialog( "Style TOC" , "If you want to style part of each line with a character style, select the components to be styled here:\n\n0: [First Text is 1] TAB [Insert Char is 2] TAB [Second Text is 3]. \n\n for instance, to style the first text and the inserted character type 12.\nto style only the second text type 3.\nto style no text type 0", "")
 		if RANGE.find("0")>=0:
 			STYLE_TEXT = False
-			scribus.messageBox('Style', "Range == 0, style text = "+str(STYLE_TEXT))
 		if RANGE.find("1")>=0:
 			STYLE_FIRST = True
 		if RANGE.find("2")>=0:
