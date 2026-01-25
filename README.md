@@ -56,7 +56,11 @@ Finally moving off Google docs.
 4. setUpTOC.py
     > This is a variant built on [Ale's table_of_contents script](https://github.com/aoloe/scribus-script-repository/tree/master/table_of_contents). It allows you to add attributes to the document listing all instances of your selected style, which Scribus can then use to generate a TOC.
 5. styleTOC.py
-    > The default Scribus Table of Contents generator applies the same paragraph style to the whole TOC. But what if you want the numbers (or chapter titles) to be styled differently? This script applies the character style of your choice to the first word(s) on each line (prior to the tab) on the selected page. Also optionally adds a tab as a prefix to each line for better tab alignment.
+    > The default Scribus Table of Contents generator applies the same paragraph style to the whole TOC. But what if you want the numbers (or chapter titles) to be styled differently? Or what if you want to insert a special character between the title and number?
+    > This script styles any section of each line in a chosen character style. It also inserts the character of your choice in the middle of the line or an initial tab upon request.
+6. pasteInlineImages.py
+    > This script can be used to insert an image, line or shape object scene break wherever you currently have a placeholder character. The placeholder must be in an ornament style that's styled the way you want the image (centered, baseline grid alignment, etc.) The script can only run in Scribus 1.6 and later, due to missing scripter commands in earlier versions. I highly recommend converting your object to a scribus symbol prior to running the script so all instances can be edited en-masse if necessary
+    > Select the object you want to place (already correctly sized) prior to running the script. Please run this script on a copy of your file. Runtime will be long on large files.
 6. chapNum.py and importCleaner.py
     > Variants of the ChapNumScribus and importCleanerScribus scripts that run in the terminal with python 3, if you have that available. Allows you to set your default variables and keep using them without messing around with all the dialogues. Intended for users comfortable with the command line and ediitng scripts manually.
 
