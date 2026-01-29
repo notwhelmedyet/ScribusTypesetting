@@ -1,7 +1,7 @@
 # Scribus Resources for Book Typesetting
 To accompany my tutorial on using Scribus to typeset (primarily fanfiction sourced from AO3) books for home bookbinding. This repo contains scripts I have authored or edited, links to other important scripts you might use & Scribus files you can use as templates to start your own book project.
 
-Finally moving off Google docs.
+![diagram listing the main scripts in this repo and their uses, described below](https://github.com/notwhelmedyet/ScribusTypesetting/blob/main/ReferenceDocs/Flier.png)
 
 ### Things I am Not: 
 * A professional programmer
