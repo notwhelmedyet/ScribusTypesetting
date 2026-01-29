@@ -71,6 +71,8 @@ Finally moving off Google docs.
     >* Cannot handle source documents that are double spaced throughout, since that logic would have to then be applied to all the source documents
 
     > This script is experimental. I have not tested all variable combinations and it might give weird results. Please let me know if you find any bugs. The script will work best on single-author anthologies, because they're less likely to have substantial formatting differences between the works
+2. runts.py
+    > If you want to prevent short words from being moved to their own line at the end of a paragraph, the runts.py script allows you to swap the last space of a paragraph to a non-breaking space wherever the last word is shorter than the minimum you specify. I haven't tested this on a full book file yet and cannot vouch for its performance. For more information see [this article](https://www.bookhouse.com.au/article/widows).
 
 ## The Templates
 Needs to be Filled Out, tldr they're shortcuts to set up some of the many styles you need to typeset a book with some sane default values.
