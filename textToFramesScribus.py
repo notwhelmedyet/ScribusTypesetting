@@ -7,6 +7,7 @@ For ChapterTitle and ChapterNumber, the entire paragraph is moved.
 
 For DropCap, the first letter (or first two characters if the line begins with a quote) is moved to the DropCap text frame
 If a text frame DropQuote exists, any beginning quote mark will be moved to DropQuote
+If a character style DropQutoe exists, the quote will be styled in that character style (using the drop cap style in superscript seems to work well)
 
 
 """
@@ -33,7 +34,7 @@ def main():
 	BOXNUMBER = ''
 	CAPITAL = ''
 	deleteLIST = []
-	QUOTELIST = ["“","”",'"',"‘","’","'"]
+	QUOTELIST = ["“","”",'"',"‘","’","'"] 
 
 	try:
 		scribus # pylint: disable=pointless-statement
@@ -101,21 +102,17 @@ def main():
 						if foundCAP == False:
 							if p_style == 'ChapterStart':
 								foundCAP = True
-								result = scribus.messageBox ('Error', 'found chapter start p0 is'+str(p[0]),scribus.BUTTON_OK)
+								#result = scribus.messageBox ('Error', 'found chapter start p0 is'+str(p[0]),scribus.BUTTON_OK)
 								if p[0] in QUOTELIST:
-									if replaceQUOTE == True:
-										result = scribus.messageBox ('Error', 'found quote and repalce quote true',scribus.BUTTON_OK)
-										foundQUOTE = True
-										QUOTE = p[0]
-										CAPITAL = p[1]
-									else:
-										result = scribus.messageBox ('Error', 'found quote and repalce quote false',scribus.BUTTON_OK)
-										CAPITAL = p[0:2]
+									foundQUOTE = True
+									QUOTE = p[0]
+									CAPITAL = p[1]
 									coordinates = (start, 2)
 								else:
-									result = scribus.messageBox ('Error', 'did not find quote',scribus.BUTTON_OK)
+									#result = scribus.messageBox ('Error', 'did not find quote',scribus.BUTTON_OK)
 									CAPITAL = p[0]
 									coordinates = (start, 1)
+								result = scribus.messageBox ('Error', 'Capital is'+CAPITAL,scribus.BUTTON_OK)
 								deleteLIST.insert(0, coordinates)
 				start += len(p) + 1 #set start to the start of the next paragraph
 			#after we find all, go through the page from bottom to top and delete marked text
@@ -136,14 +133,19 @@ def main():
 		elif item.find('DropCap')>=0:
 			if foundCAP == True:
 				scribus.insertText(CAPITAL, 0, item)
-				scribus.setParagraphStyle("DropCap", item)		
+				scribus.setParagraphStyle("DropCap", item)	
+				if foundQUOTE == True: #if we found a leading quote, AND the char style DropQuote exists, style the leading quote in that style
+					scribus.insertText(QUOTE, 0, item)
+					if "DropQuote" in scribus.getCharStyles():
+						scribus.layoutText(item) #you need to layout the text so Scribus can select it
+						scribus.selectFrameText(0, 1, item)
+						scribus.setCharacterStyle("DropQuote")
 		elif item.find('DropQuote')>=0:
 			if foundQUOTE == True:
 				scribus.insertText(QUOTE, 0, item)
-				if "DropQuote" in scribus.getParagraphStyles():
-					scribus.setParagraphStyle("DropQuote", item)		
-				else:
-					scribus.setParagraphStyle("ChapterStart", item)	
+				scribus.setParagraphStyle("DropCap", item)
+				if "DropQuote" in scribus.getCharStyles():
+					scribus.setCharacterStyle("DropQuote", item)
 		scribus.layoutText(item)
 		
 	scribus.deselectAll()

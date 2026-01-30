@@ -29,9 +29,10 @@ def main():
 	scribus.closeMasterPage()
 	current_page = scribus.currentPage()
 
-	#Set the style we want to use to generate the running header content
+	#Set whether we are inserting a character in the middle of the line
 	CHARACTER = scribus.valueDialog( "Style TOC" , "This script will only work on the currently selected page.\n\nIf you want to insert a character between the page number and chapter title, enter it here\n(or type 0 to not insert anything)\n\nNote: this is case sensitive!" , "" )
 	if CHARACTER == str(0):
+        #set what part of the line we're styling - version if we're not inserting a char
 		RANGE = scribus.valueDialog( "Style TOC" , "Do you want to style part of each line with a character style?\n\nEnter 1 to style text before the tab\nEnter 2 to style text after the tab\nEnter 0 to not style any text", "")
 		if RANGE.find("0")>=0:
 			STYLE_TEXT = False
@@ -42,7 +43,7 @@ def main():
 	else:
 		CHARACTER = "	"+CHARACTER
 		INSERT_CHAR = True
-		#Set the style we want to use to generate the running header content
+		#Set which part of the line we're styling - insert char phrasing
 		RANGE = scribus.valueDialog( "Style TOC" , "If you want to style part of each line with a character style, select the components to be styled here:\n\n0: [First Text is 1] TAB [Insert Char is 2] TAB [Second Text is 3]. \n\n for instance, to style the first text and the inserted character type 12.\nto style only the second text type 3.\nto style no text type 0", "")
 		if RANGE.find("0")>=0:
 			STYLE_TEXT = False
@@ -68,6 +69,7 @@ def main():
 				icon=scribus.ICON_CRITICAL)
 			return
 
+    #set whether the script inserts a tab at the start of each line
 	MODE = scribus.valueDialog( "Style TOC" , "Enter a 1 to insert a tab at the start of each line,\nor enter 0 to leave TOC spacing as-is" , "" )
 	if MODE == str(1):
 		TAB = True
@@ -84,8 +86,8 @@ def main():
 	size = scribus.getPageSize()
 	height = size[1]-(margins[0]+margins[3])
 	
+    #debugging message box showing selected menu options
 	#scribus.messageBox('Style', "Settings: \nAdd Char: "+str(INSERT_CHAR)+"\nStyle Text: "+str(STYLE_TEXT)+"\nStyle first half: "+str(STYLE_FIRST)+"\nStyle second half: "+str(STYLE_LAST)+"\nSelected style: "+str(STYLE))
-	
 	
 	for item, _ in page_text_frames:
 		scribus.deselectAll()
@@ -106,7 +108,7 @@ def main():
 				second_start = tab_start+1
 				if len(p)<1: #skip blank paragraphs
 					pass
-				elif tab_start>=0:
+				elif tab_start>=0: #if the paragraph includes a tab = is a TOC entry
 					if TAB == True:
 						entry = ("	", start, item)
 						insertList.insert(0, entry)

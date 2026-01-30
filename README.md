@@ -34,7 +34,7 @@ To accompany my tutorial on using Scribus to typeset (primarily fanfiction sourc
 3. textToFramesScribus.py
 	>Move certain text elements on the main margin-sized text frame into separate frames for the currently selected page.
 	>Will only work if you have text on the page using the styles ChapterTitle, ChapterNumber. Will move the first paragraph of text in the main frame (assumed to be the size of the page-margins) using those styles into text frames that contain the style name if they exist. If no matching text frame exists, the text is not moved.
-	>The script will also move the first letter of the style ChapterStart if there is a frame containing the name DropCap.
+	>The script will also move the first letter of the style ChapterStart if there is a frame containing the name DropCap. If the chapter starts with a quotation mark and a character style named DropQuote exists, the initial quotation mark will be styled with the DropQuote style.
 4. runningHeadersScribus.py
 	>This was built on [Ale's headers_with_chapter_titles script](https://github.com/aoloe/scribus-script-repository/tree/master/headers_with_chapter_titles). It finds text in a selected style (Author name, chapter title, chapter number etc.) and, for all pages assigned master page templates that have a frame name containing the word "Header", copies that frame to the page and places the author name, chapter title etc. in the frame. It continues to place that text until it encounters a new instance of the chosen style. Basically, it can automatically apply any per-chapter or per-work field to headers/footers/wherever you want to put these frames.
 

@@ -32,18 +32,18 @@ def main():
 			'Error', 'Script only works if 1 object is selected before run. Please try again',
 			icon=scribus.ICON_CRITICAL)
 		return
-	selected_object = scribus.getSelectedObject()
+	selected_object = scribus.getSelectedObject()     #copy our object for later
 	scribus.copyObjects(selected_object)
-	scribus.setRedraw(False)
+	scribus.setRedraw(False) #turn off redrawing while we work
 	scribus.closeMasterPage()
 	current_page = scribus.currentPage()
 
-	
+	#get the page margins and size so that we can check if we're looking at a primary text frame later
 	margins = scribus.getPageMargins() 
 	size = scribus.getPageSize()
 	height = size[1]-(margins[0]+margins[3])
 
-	
+	#script will only run on Scribus 1.6.x and later
 	if scribus.scribus_version_info[1]<6:
 		scribus.messageBox(
 			'Error', 'You are running Scribus '+str(scribus.scribus_version)+" Script can only run in Scribus 1.6.0 or later. Exiting...",
@@ -61,19 +61,24 @@ def main():
 		scribus.setRedraw(True)
 		return
 	else:
-		scribus.copyObjects(selected_object)
+		scribus.copyObjects(selected_object) #copy object again in case the user copied their special character and overwrote the clipboard
 	
+
+    #iterate through pages
 	for page in range(1, scribus.pageCount() + 1):
 		page_text_frames = [(item[0], scribus.getPosition(item[0])) for item in scribus.getPageItems()
 		if item[1] == 4]
 		page_text_frames.sort(key= lambda item: (item[1][1], item[1][0]))
+        #iterate through text frame on page
 		for item, _ in page_text_frames:
 			frameSize = scribus.getSize(item)
 			ratioHEIGHT = frameSize[1] / height
-			if ratioHEIGHT > 0.9: #only for ornaments within main text frame
+			if ratioHEIGHT > 0.9: #only look at the main text frame. remove this check if you want replacements in headers etc
 				scribus.deselectAll()
 				scribus.selectObject(item)
 				text = scribus.getAllText(item)
+                #rather than deal with inserting things and adjusting indices we will go backwards
+                #by making a array that lists the indices where we want to insert these from the bottom of the page up
 				indexes = []	
 				for i in findall(CHARACTER, text):
 					indexes.insert(0, i)
@@ -82,7 +87,7 @@ def main():
 					scribus.setEditMode() 
 					scribus.pasteObjects()
 					scribus.setNormalMode()
-				scribus.layoutText(item)
+				scribus.layoutText(item) #must layout text to prevent leaving script in bad state
 	
 	scribus.deselectAll()
 	scribus.gotoPage(current_page)
