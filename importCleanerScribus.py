@@ -58,7 +58,9 @@ def main(args):
 	breakcharacter = scribus.valueDialog( "Script settings" , "This script is designed to take AO3-formatted html and make a copy formatted for Scribus importing.\n\nPlease enter the character(s) from your chosen ornament font glyph that will be used as a scene break" , "" )
 	defaults = scribus.valueDialog( "More settings?", "By DEFAULT the script will do the following:\n - look for horizontal rules as the fic's scene breaks to swap for our break ornament\n - not swap any dashes to em/en dashes \n - treat consecutive multiple paragraph breaks as a scene break (and insert a blank line in the ornament style)\n - not change any straight quotes to typographic quotes.\n - keep tags and metadata at top (unformatted)\n\nTo accept these settings type 1 and enter. To edit these settings type any other character", "")
 	if defaults != str(1):
-		scenebreak = scribus.valueDialog( "Current breaks" , "Please paste the HTML for the current characters used as breaks" , "" )
+		addBreak = scribus.valueDialog( "Current breaks" , "Please paste the HTML for the current characters used as breaks" , "" )
+		if len(addBreak)>2:
+			scenebreak = addBreak #if we click through this menu without typing anything, ignore it
 		dashSelector = scribus.valueDialog( "Dash selector" , "Enter 1, 2, or 3.\n1: Do not edit any dashes \n2: Replace dashes with un-spaced em dash \n3: Replace dashes with spaced en dash" , "" )
 		if dashSelector == str(1):
 			LeaveDashesAlone = True

@@ -51,7 +51,7 @@ def main():
 		return
 
 	#Set the style we want to use to generate the running header content
-	CHARACTER = scribus.valueDialog( "Inline Image Replacer" , "This script will copy whatever object was selected when you LAUNCHED the script\nand copy it into the program wherever it finds the designated placeholder character.\n\nIf you want to exit the script without running type 0.\nOtherwise type the placeholder character or string and hit enter to find and replace.", "")
+	CHARACTER = scribus.valueDialog( "Inline Image Replacer" , "This script will copy whatever object was selected when you LAUNCHED the script\nand copy it into the file wherever it finds the designated placeholder character.\n\nIf you want to exit the script without running type 0.\nOtherwise type the placeholder character or string and hit enter to find and replace.", "")
 	if CHARACTER == str(0):
 		scribus.messageBox(
 			'Error', 'Exiting...',
