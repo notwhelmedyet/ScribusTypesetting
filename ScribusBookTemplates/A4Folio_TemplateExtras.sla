@@ -150,8 +150,16 @@
         <COLOR NAME="Yellow Orange" SPACE="RGB" R="255" G="174" B="66"/>
         <HYPHEN/>
         <CHARSTYLE CNAME="Default Character Style" DefaultStyle="1" FONT="Libertinus Serif Regular" FONTSIZE="10.7" FONTFEATURES="-clig" FEATURES="inherit" FCOLOR="Black" FSHADE="100" HyphenWordMin="3" SCOLOR="Black" BGCOLOR="None" BGSHADE="100" SSHADE="100" TXTSHX="5" TXTSHY="-5" TXTOUT="1" TXTULP="-0.1" TXTULW="-0.1" TXTSTP="-0.1" TXTSTW="-0.1" SCALEH="100" SCALEV="100" BASEO="0" KERN="0" LANGUAGE="en_US"/>
-        <CHARSTYLE CNAME="DropCap" FONT="Libertinus Serif Regular" FONTSIZE="11" FONTFEATURES="-clig" FEATURES="inherit" FCOLOR="Black" FSHADE="100" HyphenWordMin="3" SCOLOR="Black" BGCOLOR="None" BGSHADE="100" SSHADE="100" TXTSHX="5" TXTSHY="-5" TXTOUT="1" TXTULP="-0.1" TXTULW="-0.1" TXTSTP="-0.1" TXTSTW="-0.1" SCALEH="100" SCALEV="100" BASEO="0" KERN="0" LANGUAGE="en_US"/>
+        <CHARSTYLE CNAME="DropCap" FONT="Libertinus Serif Regular" FONTSIZE="25" FONTFEATURES="-clig" FEATURES="inherit" FCOLOR="Black" FSHADE="100" HyphenWordMin="3" SCOLOR="Black" BGCOLOR="None" BGSHADE="100" SSHADE="100" TXTSHX="5" TXTSHY="-5" TXTOUT="1" TXTULP="-0.1" TXTULW="-0.1" TXTSTP="-0.1" TXTSTW="-0.1" SCALEH="100" SCALEV="100" BASEO="0" KERN="0" LANGUAGE="en_US"/>
         <CHARSTYLE CNAME="FancyTOC" FONT="Libertinus Serif Regular" FONTSIZE="11" FONTFEATURES="-clig" FEATURES="inherit" FCOLOR="Black" FSHADE="100" HyphenWordMin="3" SCOLOR="Black" BGCOLOR="None" BGSHADE="100" SSHADE="100" TXTSHX="5" TXTSHY="-5" TXTOUT="1" TXTULP="-0.1" TXTULW="-0.1" TXTSTP="-0.1" TXTSTW="-0.1" SCALEH="100" SCALEV="100" BASEO="0" KERN="0" LANGUAGE="en_US"/>
+        <CHARSTYLE CNAME="DefaultShrink" CPARENT="Default Character Style" KERN="-0.1" wordTrack="0.95"/>
+        <CHARSTYLE CNAME="DefaultShrinkMore" CPARENT="DefaultShrink" KERN="-0.3"/>
+        <CHARSTYLE CNAME="DefaultShrinkMost" CPARENT="DefaultShrink" KERN="-0.5" wordTrack="0.9"/>
+        <CHARSTYLE CNAME="DefaultStretch" CPARENT="Default Character Style" KERN="0.1"/>
+        <CHARSTYLE CNAME="DefaultStretchMost" CPARENT="DefaultStretch" KERN="0.5" wordTrack="1.05"/>
+        <CHARSTYLE CNAME="DefaultStretchMore" CPARENT="DefaultStretch" KERN="0.3" wordTrack="1.05"/>
+        <CHARSTYLE CNAME="DropQuote" CPARENT="DropCap" FEATURES="superscript" TXTSHX="5" TXTSHY="-5" TXTOUT="1" TXTULP="-0.1" TXTULW="-0.1" TXTSTP="-0.1" TXTSTW="-0.1"/>
+        
         <STYLE NAME="Default Paragraph Style" DefaultStyle="1" ALIGN="3" DIRECTION="0" LINESPMode="2" LINESP="15" INDENT="0" RMARGIN="0" FIRST="10.8" VOR="0" NACH="0" ParagraphEffectOffset="0" DROP="0" DROPLIN="2" Bullet="0" Numeration="0" OpticalMargins="14" HyphenConsecutiveLines="2" MinWordTrack="0.8" MinGlyphShrink="0.97" MaxGlyphExtend="1.03" KeepLinesEnd="0" BCOLOR="None" BSHADE="100" CPARENT="Default Character Style" FONTSIZE="10.7" FONTFEATURES="-clig" HyphenWordMin="6"/>
         <STYLE NAME="SceneStart" PARENT="Default Paragraph Style" FIRST="0"/>
         <STYLE NAME="CopyrightErrata" PARENT="Default Paragraph Style" INDENT="28.3464566929134" RMARGIN="28.3464566929134" FIRST="0" NACH="12" FONT="Libertinus Serif Regular" FONTSIZE="8.5" FONTFEATURES="-clig"/>
@@ -165,13 +173,7 @@
         <STYLE NAME="TOC" PARENT="Default Paragraph Style" ALIGN="1" LINESPMode="0" INDENT="0" FIRST="0" CPARENT="Default Character Style" FONTFEATURES="-clig,+lnum">
             <Tabs Type="1" Pos="108" Fill="."/>
         </STYLE>
-        <STYLE NAME="DropCap" PARENT="Title" ALIGN="1" VOR="0" NACH="0" DROP="0" Bullet="0" Numeration="0" FONTSIZE="30" FONTFEATURES="-clig"/>
-        <STYLE NAME="ADefaultShrink" PARENT="Default Paragraph Style" MinWordTrack="0.8" MaxGlyphExtend="1.01" KERN="-0.1"/>
-        <STYLE NAME="ADefaultStretch" PARENT="Default Paragraph Style" MinWordTrack="0.95" MinGlyphShrink="0.98" MaxGlyphExtend="1.03" KERN="0.2"/>
-        <STYLE NAME="ADefaultShrinkMore" PARENT="ADefaultShrink" MinWordTrack="0.7" MinGlyphShrink="0.96" MaxGlyphExtend="1.01" KERN="-0.3" wordTrack="0.95"/>
-        <STYLE NAME="ADefaultShrinkMost" PARENT="ADefaultShrink" MinGlyphShrink="0.96" KERN="-0.5" wordTrack="0.9"/>
-        <STYLE NAME="ADefaultStretchMore" PARENT="ADefaultStretch" MinWordTrack="0.95" MinGlyphShrink="0.98" MaxGlyphExtend="1.03" KERN="0.3" wordTrack="1"/>
-        <STYLE NAME="ADefaultStretchMost" PARENT="ADefaultStretch" MinGlyphShrink="1" MaxGlyphExtend="1.03" KERN="0.5" wordTrack="1"/>
+        <STYLE NAME="DropCap" PARENT="Title" ALIGN="2" VOR="0" NACH="0" DROP="0" Bullet="0" Numeration="0" CPARENT="DropCap"/>
         <TableStyle NAME="Default Table Style" DefaultStyle="1" FillColor="None" FillShade="100">
             <TableBorderLeft>
                 <TableBorderLine Width="1" PenStyle="1" Color="Black" Shade="100"/>
