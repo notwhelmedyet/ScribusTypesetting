@@ -112,7 +112,7 @@ def main():
 									#result = scribus.messageBox ('Error', 'did not find quote',scribus.BUTTON_OK)
 									CAPITAL = p[0]
 									coordinates = (start, 1)
-								result = scribus.messageBox ('Error', 'Capital is'+CAPITAL,scribus.BUTTON_OK)
+								#result = scribus.messageBox ('Error', 'Capital is'+CAPITAL,scribus.BUTTON_OK)
 								deleteLIST.insert(0, coordinates)
 				start += len(p) + 1 #set start to the start of the next paragraph
 			#after we find all, go through the page from bottom to top and delete marked text
