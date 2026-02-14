@@ -49,6 +49,9 @@ def main():
 	keepBr = True
 	workCount = 1
 	multiAuthor = True
+	comboNounList = []
+	comboBoldList = []
+	comboItalicList = []
 
 	# the code! the code itself!! 
 	# Opening our text file in read only
@@ -137,6 +140,8 @@ def main():
 		log.write('Processing files into a combined anthology source document: '+str(list_files))
 		log.write('\nIn Directory: '+str(basehtml))
 		log.write('\nSettings selected:\multi author: '+str(multiAuthor)+'\nscenebreak: '+str(scenebreakList)+'\nbreakcharacters: '+str(breakcharacter)+'\nnewDash: '+newDash+'\nornamentAllBreaks: '+str(ornamentAllBreaks)+'\nLeaveDashesAlone: '+str(LeaveDashesAlone)+'\nLeaveQuotesAlone: '+str(LeaveQuotesAlone)+'\n\nThe output will be saved as Anthology.html. These files will be overwritten when you next run this script!\nPlease check your file before importing into Scribus & save a copy if needed')
+		log.write("\n\n###########   INDIVIDUAL FILES   ###########")
+
 		
 		anthology.write(htmlHeader)
 		meta.write(htmlHeader)
@@ -168,41 +173,44 @@ def main():
 				data = data.replace('<p>\s<p>', '<p></p>')
 				
 				# swapping italics and bold to a single method for consistency
-				log.write("\n\nSwapping italics and bolds to a single format for processing...")
-				log.write("\nSwapping italic to emphasis: "+str(data.count('i>')))
+				#log.write("\n\nSwapping italics and bolds to a single format for processing...")
+				#log.write("\nSwapping italic to emphasis: "+str(data.count('i>')))
 				data = data.replace('i>', 'em>')
-				log.write("\nSwapping b to strong: "+str(data.count('<b>')))
+				#log.write("\nSwapping b to strong: "+str(data.count('<b>')))
 				data = data.replace("<b>", "<strong>")
 				data = data.replace("</b>", "</strong>")
 								
 				log.write("\n\nRemoving/reordering extra spaces...")
-				log.write("\nwhere italic bracketed by spaces: "+str(data.count(' <em> ')))		
+				if data.count(' <em> ')>0 or data.count(' <strong> ')>0: 
+					log.write("\nwhere italic bracketed by spaces: "+str(data.count(' <em> ')))	
+					log.write("\nwhere bold bracketed by spaces: "+str(data.count(' <strong> ')))	
 				data = data.replace(' <em> ', ' <em>')
-				log.write("\nwhere italic start has internal space: "+str(data.count('<em> ')))
+				data = data.replace(' <strong> ', ' <strong>')									
+				if data.count('<em> ')>0 or data.count('<strong> ')>0:
+					log.write("\nwhere italic start has internal space: "+str(data.count('<em> ')))
+					log.write("\nwhere bold start has internal space: "+str(data.count('<strong> ')))
 				data = data.replace('<em> ', ' <em>')
-				log.write("\nwhere end italic bracketed by spaces: "+str(data.count(' </em> ')))
+				data = data.replace('<strong> ', ' <strong>')				
+				if data.count(' </em> ')>0 or data.count(' </strong> ')>0:
+					log.write("\nwhere end italic bracketed by spaces: "+str(data.count(' </em> ')))
+					log.write("\nwhere end bold bracketed by spaces: "+str(data.count(' </strong> ')))
 				data = data.replace(' </em> ', '</em> ')
 				#italic separated from punctuation by space
 				data = re.sub(' (</em>[,.?!])', r'\1', data)
 				data = re.sub('</em> ([,.?!])', '</em>'+r'\1', data)
 				data = re.sub('(["“”]) <em>', r'\1'+'<em>', data)
-				log.write("\nwhere end italic preceeded by spaces: "+str(data.count(' </em>')))
-				data = data.replace(' </em>', '</em> ')		
-				log.write("\nend of paragraphs: "+str(data.count(' </p>')))
-				data = data.replace(' </p>', '</p>')
-				log.write("\nwhere bold bracketed by spaces: "+str(data.count(' <strong> ')))
-				data = data.replace(' <strong> ', ' <strong>')
-				log.write("\nwhere bold start has internal space: "+str(data.count('<strong> ')))
-				data = data.replace('<strong> ', ' <strong>')
-				log.write("\nwhere end bold bracketed by spaces: "+str(data.count(' </strong> ')))
+				data = data.replace(' </em>', '</em> ')									
 				data = data.replace(' </strong> ', '</strong> ')
 				#bold separated from punctuation by space
 				data = re.sub(' (</strong>[,.?!])', r'\1', data)
 				data = re.sub('(</strong> [,.?!])', r'\1', data)
 				data = re.sub('(["“”]) <strong>', r'\1'+'<strong>', data)
-				log.write("\nwhere end bold preceeded by spaces: "+str(data.count(' </strong>')))
 				data = data.replace(' </strong>', '</strong> ')	
-				
+				if data.count(' </p>')>0: 
+					log.write("\nend of paragraphs: "+str(data.count(' </p>')))
+				data = data.replace(' </p>', '</p>')
+
+
 				#now that we've reordered the italic and bold we might have errant spaces, fix those
 				#log.write("start of paragraphs: ", data.count('<p> <'))
 				data = re.sub('<p>\s<', '<p><', data)	
@@ -210,10 +218,11 @@ def main():
 				data = re.sub('\s</p>', '</p>', data)
 
 				#only useful if the fic had used headers for something and we're going to fuck it up via formatting whooops
-				log.write("\n\nThese headers will be replaced by the script to use to mark chapters, chapter breaks, and scene breaks.\nIf these headers were already in use you may lose formatting from the author. Check if count>0")
-				log.write("\nh3: "+str(data.count('</h3>')))
-				log.write("\nh4: "+str(data.count('</h4>')))
-				log.write("\nh5: "+str(data.count('</h5>')))		
+				if data.count('</h3>')>0 or data.count('</h4>')>0 or data.count('</h5>')>0:
+					log.write("\n\nThese headers will be replaced by the script to use to mark chapters, chapter breaks, and scene breaks.\nIf these headers were already in use you may lose formatting from the author. Check if count>0")
+					log.write("\nh3: "+str(data.count('</h3>')))
+					log.write("\nh4: "+str(data.count('</h4>')))
+					log.write("\nh5: "+str(data.count('</h5>')))		
 
 				#Removing chapter notes
 				data = re.sub('(<h2 class="heading">.*?</h2>).*?<!--chapter content-->', r'\1', data)
@@ -316,7 +325,7 @@ def main():
 				data = data.replace('<p></p>', '')
 				
 				#replace scene breaks and make scene starts <h5>		
-				log.write("\n\nReplacing fic scene breaks with selected breakCharacter: "+breakcharacter)
+				#log.write("\n\nReplacing fic scene breaks with selected breakCharacter: "+breakcharacter)
 				data = re.sub('<hr.*?>', '<hr>', data)
 				for b in scenebreakList:
 					data = data.replace(b, newbreak)
@@ -324,23 +333,23 @@ def main():
 				data = data.replace( minibreak+newbreak, newbreak) #if they've double spaced before or after their breaks fix
 				data = data.replace('</h5><p>', '</h5><h4>')
 				data = re.sub('(<h4>.*?)</p>', r'\1</h4>', data)
-				log.write("\nTurning the first paragraph after each scene break to <h4>")
+				#log.write("\nTurning the first paragraph after each scene break to <h4>")
 				if ornamentAllBreaks:
 					data = data.replace(minibreak, newbreak)
-					log.write("\nBecause OrnamentAllBreaks=True, double paragraph spaces swapped to our ornament symbol glyph")
+					#log.write("\nBecause OrnamentAllBreaks=True, double paragraph spaces swapped to our ornament symbol glyph")
 				else:
 					data = data.replace(minibreak, minispacebreak)
-					log.write("\nBecause OrnamentAllBreaks=False, double paragraph spaces swapped to a ornament-styled blank line")
+					#log.write("\nBecause OrnamentAllBreaks=False, double paragraph spaces swapped to a ornament-styled blank line")
 
 				#Making chapter start paragraphs <h3>
-				log.write("\nTurning the first paragraph after each chapter to <h3>")
+				#log.write("\nTurning the first paragraph after each chapter to <h3>")
 				data = data.replace('</h2> <p>', '</h2><h3>')
 				data = re.sub('(<h3>.*?)</p>', r'\1</h3>', data)
 
 				
 				#for text that doesn't have typographic quotes
 				if not LeaveQuotesAlone:
-					log.write("\nAutomatically correcting typographic quotes - keep alert for quotation mark errors in typeset")
+					#log.write("\nAutomatically correcting typographic quotes - keep alert for quotation mark errors in typeset")
 					data = data.replace('&ldquo;', '"') #swap out any errant html code formats instead of glyphs
 					data = data.replace('&rdquo;', '"')
 					data = data.replace('&quot;', '"')
@@ -369,7 +378,15 @@ def main():
 					data = re.sub("‘([c,C]ause\W)", r"’\1", data)	
 					data = re.sub("‘([m,M]\W)", r"’\1", data)	
 					data = re.sub("‘(\d)", r"’\1", data) #year abbreviations
-					
+
+				#get list of proper nouns & potential problem em and strong fragments for this work
+				nounlist = re.findall(r'[a-z] ([A-Z]\w*)', data)
+				comboNounList += nounlist
+				emlist = re.findall(r'<em>.{1,2}</em>', data)
+				comboItalicList += emlist
+				stronglist = set(re.findall(r'<strong>.{1,2}</strong>', data))
+				comboItalicList += stronglist
+		
 				
 				#put all the line breaks back
 				#log.write("Replacing line breaks: ")
@@ -386,21 +403,6 @@ def main():
 				#remove /body/html at end of each work
 				data = data[:data.find('</body></html>')]
 				
-				log.write("\n\nChecking for one and two character italics")
-				log.write("\nthese may be errors that need correcting:")
-				emlist = set(re.findall(r'<em>.{1,2}</em>', data))
-				for i in emlist:
-					log.write('\n')
-					log.write(i)
-
-
-				log.write("\n\nChecking for one and two character bolds")
-				log.write("\nthese may be errors that need correcting:")
-				stronglist = set(re.findall(r'<strong>.{1,2}</strong>', data))
-				for i in stronglist:
-					log.write('\n')
-					log.write(i)
-			
 				#TEST NOT WORKING?
 				title = '<h1>'+title+'<h1>'
 				author = '<h6>'+author+'</h6>'
@@ -416,6 +418,33 @@ def main():
 			
 		anthology.write('</body></html>')
 		meta.write('</body></html>')	
+
+		log.write("\n\n###########   WHOLE DOCUMENT CHECKING   ###########")
+
+		log.write("\n\nChecking for one and two character italics")
+		log.write("\nthese may be errors that need correcting (ignore common nouns):")
+		italicset = set(comboItalicList)
+		sorteditalic = sorted(italicset, key=len)
+		for i in sorteditalic:
+			log.write('\n')
+			log.write(i)
+
+		log.write("\n\nChecking for one and two character bolds")
+		log.write("\nthese may be errors that need correcting (ignore common nouns):")
+		boldset = set(comboBoldList)
+		sortedbold = sorted(boldset,  key=len)
+		for i in sortedbold:
+			log.write('\n')
+			log.write(i)
+
+		log.write("\n\nChecking for potential proper nouns > 5 characters ")
+		log.write("\nYou may want to add some of these to your hyphenation ignore list or set custom hyphenation behavior for them:")
+		nounset = set(comboNounList)
+		sortednouns = sorted(nounset)
+		for i in sortednouns:
+			if len(i)>5:
+				log.write('\n')
+				log.write(i)
 	
 	return 0
 	 

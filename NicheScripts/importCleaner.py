@@ -287,6 +287,15 @@ def main(args):
 				data = re.sub("‘([m,M]\W)", r"’\1", data)	
 				data = re.sub("‘(\d)", r"’\1", data) #year abbreviations
 
+			log.write("\n\nChecking for potential proper nouns > 5 characters ")
+			log.write("\nYou may want to add some of these to your hyphenation ignore list or set custom hyphenation behavior for them:")
+			nounlist = set(re.findall(r'[a-z] ([A-Z]\w*)', data))
+			sortednouns = sorted(nounlist)
+			for i in sortednouns:
+				if len(i)>5:
+					log.write('\n')
+					log.write(i)
+
 			#put topmatter back in
 			data = tagdata + data
 			data = re.sub('<title>.*?</head>', '</head>', data)

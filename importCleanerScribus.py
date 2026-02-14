@@ -146,10 +146,10 @@ def main(args):
 			log.write("\n\n###########   LOG   ###########")
 			
 			# swapping italics and bold to a single method for consistency
-			log.write("\n\nSwapping italics and bolds to a single format for processing...")
-			log.write("\nSwapping italic to emphasis: "+str(data.count('i>')))
+			#log.write("\n\nSwapping italics and bolds to a single format for processing...")
+			#log.write("\nSwapping italic to emphasis: "+str(data.count('i>')))
 			data = data.replace('i>', 'em>')
-			log.write("\nSwapping b to strong: "+str(data.count('<b>')))
+			#log.write("\nSwapping b to strong: "+str(data.count('<b>')))
 			data = data.replace("<b>", "<strong>")
 			data = data.replace("</b>", "</strong>")		
 			
@@ -189,10 +189,11 @@ def main(args):
 			data = re.sub('\s</p>', '</p>', data)
 
 			#only useful if the fic had used headers for something and we're going to fuck it up via formatting whooops
-			log.write("\n\nThese headers will be replaced by the script to use to mark chapters, chapter breaks, and scene breaks.\nIf these headers were already in use you may lose formatting from the author. Check if count>0")
-			log.write("\nh3: "+str(data.count('</h3>')))
-			log.write("\nh4: "+str(data.count('</h4>')))
-			log.write("\nh5: "+str(data.count('</h5>')))		
+			if data.count('</h3>')>0 or data.count('</h4>')>0 or data.count('</h5>')>0:
+				log.write("\n\nThese headers will be replaced by the script to use to mark chapters, chapter breaks, and scene breaks.\nIf these headers were already in use you may lose formatting from the author. Check if count>0")
+				log.write("\nh3: "+str(data.count('</h3>')))
+				log.write("\nh4: "+str(data.count('</h4>')))
+				log.write("\nh5: "+str(data.count('</h5>')))		
 
 			#Removing chapter notes
 			data = re.sub('(<h2 class="heading">.*?</h2>).*?<!--chapter content-->', r'\1', data)
@@ -280,7 +281,7 @@ def main(args):
 			data = data.replace('<p></p>', '')
 			
 			#replace scene breaks and make scene starts <h5>		
-			log.write("\n\nReplacing fic scene breaks with selected breakCharacter: "+breakcharacter)
+			#log.write("\n\nReplacing fic scene breaks with selected breakCharacter: "+breakcharacter)
 			data = re.sub('<hr.*?>', '<hr>', data)
 			data = data.replace(scenebreak, newbreak)
 			data = data.replace(scenebreak2, newbreak)
@@ -291,22 +292,22 @@ def main(args):
 			data = data.replace( minibreak+newbreak, newbreak) #if they've double spaced before or after their breaks fix
 			data = data.replace('</h5><p>', '</h5><h4>')
 			data = re.sub('(<h4>.*?)</p>', r'\1</h4>', data)
-			log.write("\nTurning the first paragraph after each scene break to <h4>")
+			#log.write("\nTurning the first paragraph after each scene break to <h4>")
 			if ornamentAllBreaks:
 				data = data.replace(minibreak, newbreak)
-				log.write("\nBecause OrnamentAllBreaks=True, double paragraph spaces swapped to our ornament symbol glyph")
+				#log.write("\nBecause OrnamentAllBreaks=True, double paragraph spaces swapped to our ornament symbol glyph")
 			else:
 				data = data.replace(minibreak, minispacebreak)
-				log.write("\nBecause OrnamentAllBreaks=False, double paragraph spaces swapped to a ornament-styled blank line")
+				#log.write("\nBecause OrnamentAllBreaks=False, double paragraph spaces swapped to a ornament-styled blank line")
 
 			#Making chapter start paragraphs <h3>
-			log.write("\nTurning the first paragraph after each chapter to <h3>")
+			#log.write("\nTurning the first paragraph after each chapter to <h3>")
 			data = data.replace('</h2> <p>', '</h2><h3>')
 			data = re.sub('(<h3>.*?)</p>', r'\1</h3>', data)
 
 			#for text that doesn't have typographic quotes
 			if not LeaveQuotesAlone:
-				log.write("\nAutomatically correcting typographic quotes - keep alert for quotation mark errors in typeset")
+				#log.write("\nAutomatically correcting typographic quotes - keep alert for quotation mark errors in typeset")
 				data = data.replace('&ldquo;', '"') #swap out any errant html code formats instead of glyphs
 				data = data.replace('&rdquo;', '"')
 				data = data.replace('&quot;', '"')
@@ -335,6 +336,15 @@ def main(args):
 				data = re.sub("‘([c,C]ause\W)", r"’\1", data)	
 				data = re.sub("‘([m,M]\W)", r"’\1", data)	
 				data = re.sub("‘(\d)", r"’\1", data) #year abbreviations
+
+			log.write("\n\nChecking for potential proper nouns > 5 characters ")
+			log.write("\nYou may want to add some of these to your hyphenation ignore list or set custom hyphenation behavior for them:")
+			nounlist = set(re.findall(r'[a-z] ([A-Z]\w*)', data))
+			sortednouns = sorted(nounlist)
+			for i in sortednouns:
+				if len(i)>5:
+					log.write('\n')
+					log.write(i)
 
 			#put topmatter back in
 			data = tagdata + data
@@ -366,7 +376,7 @@ def main(args):
 			for i in stronglist:
 				log.write('\n')
 				log.write(i)
-		
+				
 	# Opening our text file in write only
 	# mode to write the replaced content
 	with open(writeName, mode='w', encoding='utf8') as f:
