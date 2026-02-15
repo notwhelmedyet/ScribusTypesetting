@@ -50,11 +50,11 @@ def main():
 	LLLength = 50
 
 		
-	mode = scribus.valueDialog("Script settings", "This script is designed to take a Scribus file, open the source XML document\nand edit it so paragraphs don't end in hyphenated words or stubs on a newline.\nIt will save a separate copy of your file named [FILENAME]_Runts.sla.\nIf you want it to fix hyphenaton you must have your document hyphenated before continuing.\n\nYou must have the Scribus document open so the script can read its paragraph styles\nEnter 0 to exit the script without running or any other character to continue", "")
+	mode = scribus.valueDialog("Script settings", "This script is designed to take the currently open Scribus file, open the source XML document\nand edit a copy so paragraphs don't end in hyphenated words or stubs on a newline.\nIt will save a separate copy of your file named [FILENAME]_Runts.sla.\nIf you want it to fix hyphenaton you must have your document hyphenated before continuing.\n\nEnter 0 to exit the script without running or any other character to continue", "")
 	if mode == str(0):
 		return 0
 	else:
-		fileName = scribus.fileDialog('Select the source file you want to edit', 'Scribus files (*.sla, *.SLA)')
+		fileName = scribus.getDocName()
 		entry = fileName.rsplit('.sla', 1)[0]
 		writeName = entry+"_Runts.sla"
 	
