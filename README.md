@@ -31,11 +31,20 @@ To accompany my tutorial on using Scribus to typeset (primarily fanfiction sourc
 	>The script will assign html headers as follows:
     >* \<h1> Chapter title ornaments
     >* \<h6> Chapter number
-3. textToFramesScribus.py
+3. runtsAndStuff.py
+	> This preprocesses a hyphenated Scribus file to prevent lots of manual dehyphenation work, stub line endings, automatically add frame breaks between paragraphs and optionally style the beginning of a paragraph style. It should be run after importing, applying styles & hyphenation. It will:
+    >* Insert a nonbreaking space in front of all short words (default 6 characters) at the end of paragraphs
+    >* Remove soft hyphens from the last X characters of paragraph endings (can turn off or set character count, default 50) 
+    >* Remove soft hyphens in all normally hyphenated words
+    >* Remove soft hyphens in last word of paragraph
+    >* Insert a frame break before instances of X style (can turn off, default ChapterTitle)
+    >* Apply a character style X to first Y of paragraph style Z (can turn off, options to apply to first Y characters, words, or up to a delimiter.)
+	> This script must be run within scribus. You need to open the scribus file you're editing with the file picker, but it must also be open within Scribus for the style verification to work correctly. You must hyphenate the whole text prior to running this script for dehyphenation to work - the script does not prevent hyphenating, it simply removes hyphenation from the situations descirbed above.
+4. textToFramesScribus.py
 	>Move certain text elements on the main margin-sized text frame into separate frames for the currently selected page.
 	>Will only work if you have text on the page using the styles ChapterTitle, ChapterNumber. Will move the first paragraph of text in the main frame (assumed to be the size of the page-margins) using those styles into text frames that contain the style name if they exist. If no matching text frame exists, the text is not moved.
 	>The script will also move the first letter of the style ChapterStart if there is a frame containing the name DropCap. If the chapter starts with a quotation mark and a character style named DropQuote exists, the initial quotation mark will be styled with the DropQuote style.
-4. runningHeadersScribus.py
+5. runningHeadersScribus.py
 	>This was built on [Ale's headers_with_chapter_titles script](https://github.com/aoloe/scribus-script-repository/tree/master/headers_with_chapter_titles). It finds text in a selected style (Author name, chapter title, chapter number etc.) and, for all pages assigned master page templates that have a frame name containing the word "Header", copies that frame to the page and places the author name, chapter title etc. in the frame. It continues to place that text until it encounters a new instance of the chosen style. Basically, it can automatically apply any per-chapter or per-work field to headers/footers/wherever you want to put these frames.
 
 	>I added in dialogue options within Scribus to set a number of extra variables: whether the script should delete previously created headers, whether the script should apply to left/right/both pages, the source style to search for the header text, a destination style to apply to the headers and whether to append text from the master page to the header.
@@ -71,8 +80,6 @@ To accompany my tutorial on using Scribus to typeset (primarily fanfiction sourc
     >* Cannot handle source documents that are double spaced throughout, since that logic would have to then be applied to all the source documents
 
     > This script is experimental. I have not tested all variable combinations and it might give weird results. Please let me know if you find any bugs. The script will work best on single-author anthologies, because they're less likely to have substantial formatting differences between the works
-2. runts.py
-    > If you want to prevent short words from being moved to their own line at the end of a paragraph, the runts.py script allows you to swap the last space of a paragraph to a non-breaking space wherever the last word is shorter than the minimum you specify. I haven't tested this on a full book file yet and cannot vouch for its performance. For more information see [this article](https://www.bookhouse.com.au/article/widows).
 
 ## The Templates
 Needs to be Filled Out, tldr they're shortcuts to set up some of the many styles you need to typeset a book with some sane default values.
