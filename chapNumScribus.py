@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  importCleanerScribus.py
-#  a program for cleaning up various spacing/italics/typographic quote issues in ao3 downloads for faster import into scribus
-#  this version is intended to be run within scribus
-#  
-#  Copyright 2025 Lynn <lynn@miette>
+#  chapNumScribus.py
+#   These scripts take a already-processed html file created by ImportCleaner and apply one of several changes:
+#    -   Add chapter numbers (in chosen format) prior to chapter title
+#    -   Replace chapter title with chapter numbers. If the chapters were not given titles within AO3 the default title will be 'Chapter One' etc.
+#    -   Add a separate-style ornament either above or below chapter titles/numbers
 #  
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@ def main(args):
 	STYLES = [[], ROMAN, LROMAN, NAME, CAPNAME, ACAPNAME]
 	
 	#FIC SPECIFIC VARIABLES, edit as needed	
-	SUFFIX = '.'
+	SUFFIX = ''
 	LIST = STYLES[1]
-	PREFIX = PREFIXES[1]
+	PREFIX = ''
 	usePREFIX = False #if true, prefix numbers with 'chapter: ' or some other prefix
 	useDIGIT = False #if true, use digits 1,2,3. Otherwise use the names or roman numerals from the list
 	useSUFFIX = False #if true, put a suffix after the number (like : or .)
@@ -50,6 +50,7 @@ def main(args):
 	replaceNums = False #if we want to replace the current chapter titles/numbers
 	ornamentAFTER = False
 	ornamentBETWEEN = False
+	ornamentBEFORE = False
 	ORNAMENT = 'X'
 	OFFSET = 1 #set offset >1 if we want to skip prologue chapter
 	
@@ -75,18 +76,18 @@ def main(args):
 	else:
 		LIST = STYLES[val]
 	
-	val = scribus.valueDialog( "More settings?" , "Do you want to enter the advanced settings? \nIn advanced settings you can optionally add chapter number prefixes, suffixes, ornaments, or skip prologue chapters. \nEnter 1 to enter advanced settings, enter any other character to run the script" , "" )
+	val = scribus.valueDialog( "More settings?" , "Do you want to enter the advanced settings? \nIn advanced settings you can optionally add chapter number prefixes, suffixes, or skip prologue chapters. \nEnter 1 to enter advanced settings, enter any other character to run the script" , "" )
 	if val == str(1):
 
 		val = scribus.valueDialog( "Advanced settings" , "Do you want to put a prefix before the chapter number? Enter 1-3 or enter your custom prefix.\n1: No prefix \n2: Prefix with 'Chapter ' \n3 Prefix with 'chapter ' \nOr enter your prefix below" , "" )		
 		if val != str(1):
 			usePREFIX = True
-		if val == str(1):
-			pass
 		if val == str(2):
 			PREFIX = PREFIXES[0]
 		elif val == str(3):
 			PREFIX = PREFIXES[1]
+		elif val == str(1):
+			PREFIX = ""
 		else:
 			PREFIX = val
 		
@@ -97,31 +98,26 @@ def main(args):
 			pass
 		else:
 			SUFFIX = val
+			#we need to escape delimiter if it is a period
+			if SUFFIX == ".":
+				SUFFIX = "\."
 		
-		if replaceNums == True:
-			val = scribus.valueDialog( "Advanced settings" , "Do you want to place a ornament on a new line before or after the chapter number? Enter 1-3.\n1: No ornament \n2: Ornament after chapter number \n3: Ornament before chapter number" , "" )		
-			if val == str(1):
-				pass
-			if val == str(2):
-				ornamentAFTER = True
-			elif val == str(3):
-				ornamentBETWEEN = True
-			else:
-				sys.exit()
+		val = scribus.valueDialog( "Advanced settings" , "Do you want to place a ornament on a new line before or after the chapter number/title? Enter 1-3.\n1: No ornament \n2: Ornament after chapter number/title \n3: Ornament before chapter number\n4: Ornament between chapter number and title" , "" )		
+		if val == str(1):
+			pass
+		if val == str(2):
+			ornamentAFTER = True
+		elif val == str(3):
+			ornamentBEFORE = True
+		elif val == str(4):
+			ornamentBETWEEN = True
 		else:
-			val = scribus.valueDialog( "Advanced settings" , "Do you want to place a ornament on a new line before or after the chapter title? Enter 1-3.\n1: No ornament \n2: Ornament after title \n3: Ornament between the chapter number and chapter title" , "" )		
-			if val == str(1):
-				pass
-			if val == str(2):
-				ornamentAFTER = True
-			elif val == str(3):
-				ornamentBETWEEN = True
-			else:
-				sys.exit()			
+			sys.exit()		
 		
-		if ornamentAFTER == True or ornamentBETWEEN == True:
+		if ornamentAFTER == True or ornamentBETWEEN == True or ornamentBEFORE == True:
 			val = scribus.valueDialog( "Advanced settings" , "Enter character(s) that will be inserted as an ornament. \nThe ornament will use the h1 header (previously reserved for chapter titles) because I've run out of header options." , "" )	
 			ORNAMENT = val
+		
 		
 		val = scribus.valueDialog( "Advanced settings" , "Do you want to skip one or more chapters at the beginning before numbering chapters? \nEnter 1 to number all chapters or enter the number of the first chapter you want to be counted. (i.e. to skip a single prologue, enter 2)" , "" )
 		try:
@@ -146,6 +142,9 @@ def main(args):
 	if oneLine==True and ornamentBETWEEN==True:
 		result = scribus.messageBox ('Error', 'invalid menu options, cannot both combine the title & number into a single line AND add a separate style ornament between them',scribus.BUTTON_OK)
 		exit()	
+	if replaceNums==True and ornamentBETWEEN==True:
+		result = scribus.messageBox ('Error', 'invalid menu options, cannot both combine the title & number into a single line AND put an ornament on a newline between them. Script will quit.',scribus.BUTTON_OK)
+		exit()		
 	result = scribus.messageBox ('Settings', 'Ornament settings. Ornament after = '+str(ornamentAFTER)+' Ornament between = '+str(ornamentBETWEEN),scribus.BUTTON_OK)
 
 	
@@ -158,48 +157,33 @@ def main(args):
 		#result = scribus.messageBox ('Running', 'File opened',scribus.BUTTON_OK)
 		data = data.replace('\t', '')
 		data = data.replace('\n', '')
-		chapters = data.split('<h2>')
-		cNum = 0
-		dataMod = ''
-		for c in chapters:
-			#result = scribus.messageBox ('processing chapter', '',scribus.BUTTON_OK)
-			if cNum==0:
+		cTitles = re.findall(r'<h2>(.*?)</h2>', data)
+		cNum = 1
+		for c in cTitles:
+			if cNum<OFFSET:
 				pass
-			elif cNum<OFFSET:
-				dataMod += '<h2>'
 			else:
+				if useDIGIT:
+					subDigit = PREFIX + str(cNum-OFFSET+1) + SUFFIX
+				else:
+					subDigit = PREFIX + LIST[cNum-OFFSET] + SUFFIX
+				result = scribus.messageBox ('processing chapter', f'{c} - subdigit is {subDigit}',scribus.BUTTON_OK)
 				if oneLine == True: #if we want it all on one line, keep using h2
-					dataMod += '<h2>'
+					data = re.sub(f'<h2>({c})</h2>', fr'<h2>{subDigit} \1</h2>', data)
 				elif replaceNums == True:
-					if ornamentBETWEEN == True:
-						dataMod += '<h1>'+ORNAMENT+'</h1>'
-					dataMod += '<h2>'
+					data = re.sub(f'<h2>{c}</h2>', fr'<h2>{subDigit}</h2>', data)
 				else: #otherwise use h6 for the chapter number
-					dataMod += '<h6>'
-				if replaceNums == True: #if we are deleting the chapter title to put in our number instead, delete everything before the </h2>
-					c = re.sub('.*?</h2>', '</h2>', c)
-				if usePREFIX == True: #if we're adding a prefix, add a prefix
-					dataMod += PREFIX
-				if useDIGIT == False: #if we're not using digits, fetch the list item
-					dataMod += LIST[cNum-OFFSET]
-				else: #otherwise use the digit
-					dataMod += str(cNum)
-				if useSUFFIX == True: #if we're using a suffix, add the suffix
-					dataMod += SUFFIX
-				if replaceNums == False: #if we aren't replacing the chapter title either close out the h6 for our number OR put a space (if all on one line)
-					if oneLine == False: 
-						dataMod += '</h6>'
-						if ornamentBETWEEN == True:
-							dataMod += '<h1>'+ORNAMENT+'</h1>'
-						dataMod += '<h2>'
-					if oneLine == True:
-						dataMod += ' '
-				if ornamentAFTER == True:
-					dataMod += '</h2>'
-					dataMod += '<h1>'+ORNAMENT+'</h1>'
-			dataMod += c
+					data = re.sub(f'(<h2>{c}</h2>)', fr'<h6>{subDigit}</h6>\1', data)
 			cNum += 1
-		data = dataMod
+		
+		subOrnament = "<h1>"+ORNAMENT+"</h1>"
+		if ornamentAFTER == True:
+			data = re.sub(f'</h2>', fr'</h2>{subOrnament}', data)
+		elif ornamentBETWEEN == True:
+			data = re.sub(f'</h6><h2>', fr'</h6>{subOrnament}<h2>', data)
+		elif ornamentBEFORE == True:
+			data = re.sub(f'<h2>', fr'{subOrnament}<h2>', data)
+		
 		data = re.sub('</h2></h2>', '</h2>', data)
 		data = re.sub('</h1></h2>', '</h2>', data)
 
@@ -221,7 +205,9 @@ def main(args):
 		# Writing the replaced data in our
 		# text file
 		file2.write(data)
-	  
+
+	scribus.messagebarText("Done!")
+	scribus.messagebarText("")
 	return 0
 
 if __name__ == '__main__':
