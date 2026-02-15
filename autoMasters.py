@@ -3,6 +3,9 @@
 For more details see the README.md
 """
 
+import string
+import re
+
 try:
 	import scribus
 except ImportError:
@@ -91,14 +94,16 @@ def main():
 				icon=scribus.ICON_CRITICAL)
 			return
 
-	scribus.messageBox('Settings', f'Looking for chapter pages that include text with the style {HeadingStyle}\nRight chapter page master is {chapRight}\nLeft chapter page master (if applicable) is {chapLeft}, blank left page master is {blankLeft}')
-	scribus.messageBox('Settings', 'filename is '+scribus.getDocName())
+	#scribus.messageBox('Settings', f'Looking for chapter pages that include text with the style {HeadingStyle}\nRight chapter page master is {chapRight}\nLeft chapter page master (if applicable) is {chapLeft}\nBlank left page master is {blankLeft}')
 	
-	'''
+	
 	applyPage = False
 	blankPage = False
 	for page in range(1, scribus.pageCount() + 1):
+		applyPage = False
+		blankPage = False
 		# get the text and linked frames, sorted by the position on the page
+		scribus.gotoPage(page)
 		page_text_frames = [(item[0], scribus.getPosition(item[0])) for item in scribus.getPageItems()
 			if item[1] == 4]
 		page_text_frames.sort(key= lambda item: (item[1][1], item[1][0]))
@@ -109,30 +114,37 @@ def main():
 
 			text = scribus.getFrameText()
 			#if there's no text this is a white page
-			test = re.search('\W', text)
+			test = re.search('\w', text)
 			if test:
-				blankPage = True
-			else:
 				paragraphs = text.split('\r')
-
 				start = 0
 				for p in paragraphs:
-					scribus.selectFrameText(start, len(p))
-					p_style = scribus.getParagraphStyle()
-					if p_style == Heading_Style:
-						applyPage = True
+					if len(p)>1: #was finding the style in blank paragraphs that I don't believe exist so fuck it
+						scribus.selectFrameText(start, len(p))
+						p_style = scribus.getParagraphStyle()
+						#scribus.messageBox('Settings', f'On page {page}\nparagraph is {p}, p_style is {p_style}, heading')
+						if p_style == HeadingStyle:
+							applyPage = True
+							#scribus.messageBox('Settings', f'On page {page}\nparagraph is {p}, p_style is {p_style}, heading')
 					start += len(p) + 1
-		if applyPage == True:
-			if blankPage = True:
-				#apply blank left master page
 			else:
+				#scribus.messageBox('Settings', f'On page {page}\nthe page is blank. The page text is{text}')
+				blankPage = True
+		if blankPage == True:
+			#scribus.messageBox('Settings', 'Blank page is true')
+			#apply blank left master page
+			if allRight == True and scribus.getPageType(page) == 0: 
+				scribus.applyMasterPage(blankLeft, page)
+		if applyPage == True:
+				#scribus.messageBox('Settings', 'Apply page is true')
 				#figure out if page is on the right or left
-				#page type 0 is 
+				#page type 0 is left
 				if scribus.getPageType(page) == 0: 
-				#page type 2 is
+					if allRight == False:
+						scribus.applyMasterPage(chapLeft, page)
+				#page type 2 is right page
 				if scribus.getPageType(page) == 2: 
-		blankPage = False
-		applyPage = False'''
+					scribus.applyMasterPage(chapRight, page)
 
 
 	scribus.deselectAll()

@@ -48,6 +48,8 @@ To accompany my tutorial on using Scribus to typeset (primarily fanfiction sourc
 	>This was built on [Ale's headers_with_chapter_titles script](https://github.com/aoloe/scribus-script-repository/tree/master/headers_with_chapter_titles). It finds text in a selected style (Author name, chapter title, chapter number etc.) and, for all pages assigned master page templates that have a frame name containing the word "Header", copies that frame to the page and places the author name, chapter title etc. in the frame. It continues to place that text until it encounters a new instance of the chosen style. Basically, it can automatically apply any per-chapter or per-work field to headers/footers/wherever you want to put these frames.
 
 	>I added in dialogue options within Scribus to set a number of extra variables: whether the script should delete previously created headers, whether the script should apply to left/right/both pages, the source style to search for the header text, a destination style to apply to the headers and whether to append text from the master page to the header.
+6. autoMasters.py
+    > This script will automatically apply master pages for the pages that begin chapters & blank facing pages by searching for a chosen heading style that appears at the start of chapters. You would use this script at the very end (around the same time as runningHeaders)
 
 ## Niche/Peripherally Useful Scripts
 1. ResizeMarginsAndHeadersScribus.py
