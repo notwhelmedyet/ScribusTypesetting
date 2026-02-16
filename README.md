@@ -51,15 +51,15 @@ To accompany my tutorial on using Scribus to typeset (primarily fanfiction sourc
 6. autoMasters.py
     > This script will automatically apply master pages for the pages that begin chapters & blank facing pages by searching for a chosen heading style that appears at the start of chapters. You would use this script at the very end (around the same time as runningHeaders)
 
-## Niche/Peripherally Useful Scripts
+## Situational Scripts
 1. ResizeMarginsAndHeadersScribus.py
 	>Resizes text frames and moves them to align with the page margins. This script is intended to be used on book-style documents with automatic text frames after the size of the page or margins has been changed. The script was only tested with facing page layouts where the first page is on the right hand side and all pages have the same margins. Based on initial code by Blaze.
-2. colors-to-layer.py & name-match-move-to-layer.py
+2. move-to-layer-colors.py & move-to-layer-name-match.py
 	>Two variants of [Ale's images-to-layer script](https://github.com/aoloe/scribus-script-repository/tree/master/images-to-layer) These scripts (in addition to the images-to-layer script) are useful for a highly specialized task: you did not use layers when making your file but then realize you want to export the text and images/colored elements/specific items in different files. Maybe you want to print text and images on separate printers to save color ink or to optimize quality by using a b&w laserjet for text. Maybe you want to offer someone an image-free version to save on printing costs. Either way, this will make it easier.
 
 	>* images-to-layer moves all images to a layer of your choice.
-	>* colors-to-layer moves all objects that have a fill or line color which is anything besides black, white or none. It is greedy and also moves anything with a gradient or hatch fill, because for some reason the script thinks those things are aquamarine. It does not notice colored text.
-	>* name-match-move-to-layer looks at the currently selected object and moves all objects that have a name containing that object's name to a layer. This will really only work if you gave the object a unique name prior to copy and pasting it many times. But in that specific use-case it is very handy.
+	>* move-to-layer-colors moves all objects that have a fill or line color which is anything besides black, white or none. It is greedy and also moves anything with a gradient or hatch fill, because for some reason the script thinks those things are aquamarine. It does not notice colored text.
+	>* move-to-layer-name-match looks at the currently selected object and moves all objects that have a name containing that object's name to a layer. This will really only work if you gave the object a unique name prior to copy and pasting it many times. But in that specific use-case it is very handy.
 3. renumberSplitPages.py
     > Sometimes you have to split a book into multiple scribus files because it starts lagging. This is a script to adjust the page numbers of all those files so they count up sequentially file-to-file.  It also checks to make sure you have correct alternating left-right pages across files.
 
@@ -72,7 +72,7 @@ To accompany my tutorial on using Scribus to typeset (primarily fanfiction sourc
 6. pasteInlineImages.py
     > This script can be used to insert an image, line or shape object scene break wherever you currently have a placeholder character. The placeholder must be in an ornament style that's styled the way you want the image (centered, baseline grid alignment, etc.) The script can only run in Scribus 1.6 and later, due to missing scripter commands in earlier versions. I highly recommend converting your object to a scribus symbol prior to running the script so all instances can be edited en-masse if necessary
     > Select the object you want to place (already correctly sized) prior to running the script. Please run this script on a copy of your file. Runtime will be long on large files.
-6. chapNum.py and importCleaner.py
+6. CommandLine-chapNum.py and CommandLine-importCleaner.py
     > Variants of the ChapNumScribus and importCleanerScribus scripts that run in the terminal with python 3, if you have that available. Allows you to set your default variables and keep using them without messing around with all the dialogues. Intended for users comfortable with the command line and ediitng scripts manually.
 
 ## Experimental Scripts (need further testing)
