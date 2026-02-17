@@ -4,6 +4,7 @@
 
 
 import scribus
+import re
 
 def main():
 	if not scribus.haveDoc():
@@ -53,16 +54,18 @@ def main():
 			for p in paragraphs:
 				scribus.selectFrameText(start, len(p))
 				p_style = scribus.getParagraphStyle()
-				if p_style == heading and len(p)>2: #len check avoids adding blank line entries. might be better to go >1
-					toc_attributes.append({
-							'Name': attribute_name,
-							'Type': 'none',
-							'Value': p,
-							'Parameter': 'none',
-							'Relationship': 'none',
-							'RelationshipTo': '',
-							'AutoAddTo': 'none'
-						})
+				if p_style == heading and len(p)>0: #len check avoids adding blank line entries. might be better to go >1
+					test = re.search('\w', p)
+					if test:
+						toc_attributes.append({
+								'Name': attribute_name,
+								'Type': 'none',
+								'Value': p,
+								'Parameter': 'none',
+								'Relationship': 'none',
+								'RelationshipTo': '',
+								'AutoAddTo': 'none'
+							})
 				start += len(p) + 1
 			if toc_attributes:
 					attributes = [a for a in scribus.getObjectAttributes() if a['Name'] != attribute_name]

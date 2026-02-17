@@ -66,6 +66,7 @@ def main():
 
     #iterate through pages
 	for page in range(1, scribus.pageCount() + 1):
+		scribus.gotoPage(page)
 		page_text_frames = [(item[0], scribus.getPosition(item[0])) for item in scribus.getPageItems()
 		if item[1] == 4]
 		page_text_frames.sort(key= lambda item: (item[1][1], item[1][0]))
@@ -77,11 +78,13 @@ def main():
 				scribus.deselectAll()
 				scribus.selectObject(item)
 				text = scribus.getAllText(item)
+				#scribus.messageBox('Settings', f'On page {page}\text is {text}')
                 #rather than deal with inserting things and adjusting indices we will go backwards
                 #by making a array that lists the indices where we want to insert these from the bottom of the page up
 				indexes = []	
 				for i in findall(CHARACTER, text):
 					indexes.insert(0, i)
+					#scribus.messageBox('Settings', f'On page {page}\we found our character {CHARACTER}')
 				for i in indexes:
 					scribus.selectText(i, len(CHARACTER), item)
 					scribus.setEditMode() 

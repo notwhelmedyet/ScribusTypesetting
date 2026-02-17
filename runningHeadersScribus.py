@@ -101,21 +101,26 @@ def main():
 		return
 
 	#Set the style we want to use to generate the running header content
-	HeadingStyle = scribus.valueDialog( "Set Up Running Headers" , "Enter the paragraph style to search for the running header content (or type 1 to leave as default, ChapterTitle)\n\nNote: this is case sensitive!" , "" )
+	try:
+		HeadingStyle = scribus.itemDialog( "Set Up Running Headers" , "Enter the paragraph style to search for the running header content", scribus.getParagraphStyles())
+	except:		
+		HeadingStyle = scribus.valueDialog( "Set Up Running Headers" , "Enter the paragraph style to search for the running header content (or type 1 to leave as default, ChapterTitle)\n\nNote: this is case sensitive!" , "" )
 	if HeadingStyle == str(1):
 		HEADING_STYLE = 'ChapterTitle'
 	else:
 		HEADING_STYLE = HeadingStyle
-	if HEADING_STYLE not in scribus.getParagraphStyles():
-		scribus.setRedraw(True)
-		scribus.messageBox(
-			'Error',
-			f'No style found with the name {HEADING_STYLE}',
-			icon=scribus.ICON_CRITICAL)
-		return
+		if HeadingStyle not in scribus.getParagraphStyles():
+			scribus.messageBox(
+				'Error',
+				f'No style found with the name {HeadingStyle}',
+				icon=scribus.ICON_CRITICAL)
+			return
 		
 	#Set the style we want to use to style the running header content
-	NewHeadingStyle = scribus.valueDialog( "Set Up Running Headers" , "Enter the paragraph style to use for the new running headers (or type 1 to leave as default, RunningHeader)\n\nNote: this is case sensitive!" , "" )
+	try:
+		NewHeadingStyle = scribus.itemDialog( "Set Up Running Headers" , "Enter the paragraph style to use for the new running headers", scribus.getParagraphStyles())
+	except:		
+		NewHeadingStyle = scribus.valueDialog( "Set Up Running Headers" , "Enter the paragraph style to use for the new running headers (or type 1 to leave as default, RunningHeader)\n\nNote: this is case sensitive!" , "" )
 	if NewHeadingStyle == str(1):
 		NEW_HEADING_STYLE = 'RunningHeader'
 	else:

@@ -119,7 +119,8 @@ def main():
 				paragraphs = text.split('\r')
 				start = 0
 				for p in paragraphs:
-					if len(p)>1: #was finding the style in blank paragraphs that I don't believe exist so fuck it
+					test = re.search('\w', p)
+					if test: #was finding the style in blank paragraphs that I don't believe exist so fuck it
 						scribus.selectFrameText(start, len(p))
 						p_style = scribus.getParagraphStyle()
 						#scribus.messageBox('Settings', f'On page {page}\nparagraph is {p}, p_style is {p_style}, heading')

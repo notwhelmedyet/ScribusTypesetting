@@ -78,7 +78,7 @@ def main(args):
 	
 	val = scribus.valueDialog( "More settings?" , "Do you want to enter the advanced settings? \nIn advanced settings you can optionally add chapter number prefixes, suffixes, or skip prologue chapters. \nEnter 1 to enter advanced settings, enter any other character to run the script" , "" )
 	if val == str(1):
-
+		
 		val = scribus.valueDialog( "Advanced settings" , "Do you want to put a prefix before the chapter number? Enter 1-3 or enter your custom prefix.\n1: No prefix \n2: Prefix with 'Chapter ' \n3 Prefix with 'chapter ' \nOr enter your prefix below" , "" )		
 		if val != str(1):
 			usePREFIX = True
@@ -111,8 +111,6 @@ def main(args):
 			ornamentBEFORE = True
 		elif val == str(4):
 			ornamentBETWEEN = True
-		else:
-			sys.exit()		
 		
 		if ornamentAFTER == True or ornamentBETWEEN == True or ornamentBEFORE == True:
 			val = scribus.valueDialog( "Advanced settings" , "Enter character(s) that will be inserted as an ornament. \nThe ornament will use the h1 header (previously reserved for chapter titles) because I've run out of header options." , "" )	
@@ -145,7 +143,7 @@ def main(args):
 	if replaceNums==True and ornamentBETWEEN==True:
 		result = scribus.messageBox ('Error', 'invalid menu options, cannot both combine the title & number into a single line AND put an ornament on a newline between them. Script will quit.',scribus.BUTTON_OK)
 		exit()		
-	result = scribus.messageBox ('Settings', 'Ornament settings. Ornament after = '+str(ornamentAFTER)+' Ornament between = '+str(ornamentBETWEEN),scribus.BUTTON_OK)
+	#result = scribus.messageBox ('Settings', 'Ornament settings. Ornament after = '+str(ornamentAFTER)+' Ornament between = '+str(ornamentBETWEEN),scribus.BUTTON_OK)
 
 	
 	scribus.messagebarText("Running Script. Please wait...")
@@ -167,7 +165,7 @@ def main(args):
 					subDigit = PREFIX + str(cNum-OFFSET+1) + SUFFIX
 				else:
 					subDigit = PREFIX + LIST[cNum-OFFSET] + SUFFIX
-				result = scribus.messageBox ('processing chapter', f'{c} - subdigit is {subDigit}',scribus.BUTTON_OK)
+				#result = scribus.messageBox ('processing chapter', f'{c} - subdigit is {subDigit}',scribus.BUTTON_OK)
 				if oneLine == True: #if we want it all on one line, keep using h2
 					data = re.sub(f'<h2>({c})</h2>', fr'<h2>{subDigit} \1</h2>', data)
 				elif replaceNums == True:
@@ -206,7 +204,7 @@ def main(args):
 		# text file
 		file2.write(data)
 
-	scribus.messagebarText("Done!")
+	#scribus.messagebarText("Done!")
 	scribus.messagebarText("")
 	return 0
 
