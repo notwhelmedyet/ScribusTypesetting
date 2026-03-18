@@ -343,7 +343,7 @@ def main():
 
 				#Making chapter start paragraphs <h3>
 				#log.write("\nTurning the first paragraph after each chapter to <h3>")
-				data = data.replace('</h2> <p>', '</h2><h3>')
+				data = data.replace('</h2>\s*?<p>', '</h2><h3>')
 				data = re.sub('(<h3>.*?)</p>', r'\1</h3>', data)
 
 				
@@ -403,8 +403,7 @@ def main():
 				#remove /body/html at end of each work
 				data = data[:data.find('</body></html>')]
 				
-				#TEST NOT WORKING?
-				title = '<h1>'+title+'<h1>'
+				title = '<h1>'+title+'</h1>'
 				author = '<h6>'+author+'</h6>'
 				anthology.write(title+'\n')
 				if multiAuthor == True:
