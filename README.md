@@ -31,6 +31,9 @@ To accompany my tutorial on using Scribus to typeset (primarily fanfiction sourc
 	>The script will assign html headers as follows:
     >* \<h1> Chapter title ornaments
     >* \<h6> Chapter number
+3. boldItalicsToStyle.py
+    > When importing HTML, Scribus hardcodes your substitution fonts as manual overrides wherever it found bold, italic, bold italic etc. This guides you in replacing those with character styles, if you prefer. If you already have char styles Italic, Bold and BoldItalic, it will use those. Otherwise it will create them.
+    > It also addresses a bug: if you import HTML, realize you messed up and then import the text again Scribus will hard code the substitution fonts for all of your html header styles. You can avoid that bug by closing the document without saving and reimporting (or deleting the HTML header styles before importing). You can also use this script to fix it. It will only address that bug if you haven't swapped the html header styles to your document styles yet.
 3. runtsAndStuff.py
 	> This preprocesses a hyphenated Scribus file to prevent lots of manual dehyphenation work, stub line endings, automatically add frame breaks between paragraphs and optionally style the beginning of a paragraph style. It should be run after importing, applying styles & hyphenation. It will:
     >* Insert a nonbreaking space in front of all short words (default 6 characters) at the end of paragraphs

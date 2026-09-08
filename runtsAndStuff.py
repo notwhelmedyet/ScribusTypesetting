@@ -200,6 +200,14 @@ def main():
 			data = re.sub(f'(CH=".*)[ ](\S{NUM}/>\s*<para)', fr'\1{nonbreak}\2', data)
 		else:
 			data = re.sub(f'(Chars=".*)[ ](\S{NUM}/>\s*<para)', fr'\1{nonbreak}\2', data)
+			
+			
+		#insert nonbreaking space before last X characters
+		nonbreak = '\u00A0'
+		if data.find('<SCRIBUSUTF8NEW Version="1.6')>1 or data.find('<SCRIBUSUTF8NEW Version="1.5')>1 or data.find('<SCRIBUSUTF8NEW Version="1.7.0')>1:
+			data = re.sub(f'—', fr'"/>\n                <zwnbspace CPARENT="Default Character Style"/>\n                <ITEXT CH="—', data)
+		else:
+			data = re.sub(f'(Chars=".*)[ ](\S{NUM}/>\s*<para)', fr'\1{nonbreak}\2', data)
 		
 
 		#insert frame break where selected style found

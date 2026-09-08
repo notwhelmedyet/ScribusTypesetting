@@ -147,273 +147,276 @@ def main():
 		meta.write(htmlHeader)
 		
 		for entry in list_files:
-			with open(basehtml+'/'+entry, mode='r', encoding='utf8') as f:
-				data = f.read()
-				#scribus.messageBox("message", "Running for file: "+str(entry)+" work count is: "+str(workCount))
-				log.write('\n\nProcessing file: '+str(entry))
-				
-				#remove all tabs, newlines and duplicate spaces
-				#log.write("Removing all linebreaks for processing....")
-				data = data.replace('\t', '')
-				data = data.replace('\n', '')
-				
-				#sometimes our scene break is surrounded by <span></span>. We need to axe those so we can get rid of the sdans, which otherwise mess up our italic spacing correction
-				#EDIT POINT
-				for b in scenebreakList:
-					if b.find('<span>')>1:
-						nospanbreak = b.replace('span>', 'p>')
-						data = data.replace(b, nospanbreak)
-						scenebreakList.remove(b)
-						scenebreakList.append(nospanbreak)
-				data = data.replace('<span>', '')
-				data = data.replace('</span>', '')
-				
-				data = re.sub(r'\s{2,}', ' ', data)	
-				data = data.replace('/p> <p>', '/p><p>')
-				data = data.replace('<p>\s<p>', '<p></p>')
-				
-				# swapping italics and bold to a single method for consistency
-				#log.write("\n\nSwapping italics and bolds to a single format for processing...")
-				#log.write("\nSwapping italic to emphasis: "+str(data.count('i>')))
-				data = data.replace('i>', 'em>')
-				#log.write("\nSwapping b to strong: "+str(data.count('<b>')))
-				data = data.replace("<b>", "<strong>")
-				data = data.replace("</b>", "</strong>")
-								
-				log.write("\n\nRemoving/reordering extra spaces...")
-				if data.count(' <em> ')>0 or data.count(' <strong> ')>0: 
-					log.write("\nwhere italic bracketed by spaces: "+str(data.count(' <em> ')))	
-					log.write("\nwhere bold bracketed by spaces: "+str(data.count(' <strong> ')))	
-				data = data.replace(' <em> ', ' <em>')
-				data = data.replace(' <strong> ', ' <strong>')									
-				if data.count('<em> ')>0 or data.count('<strong> ')>0:
-					log.write("\nwhere italic start has internal space: "+str(data.count('<em> ')))
-					log.write("\nwhere bold start has internal space: "+str(data.count('<strong> ')))
-				data = data.replace('<em> ', ' <em>')
-				data = data.replace('<strong> ', ' <strong>')				
-				if data.count(' </em> ')>0 or data.count(' </strong> ')>0:
-					log.write("\nwhere end italic bracketed by spaces: "+str(data.count(' </em> ')))
-					log.write("\nwhere end bold bracketed by spaces: "+str(data.count(' </strong> ')))
-				data = data.replace(' </em> ', '</em> ')
-				#italic separated from punctuation by space
-				data = re.sub(' (</em>[,.?!])', r'\1', data)
-				data = re.sub('</em> ([,.?!])', '</em>'+r'\1', data)
-				data = re.sub('(["“”]) <em>', r'\1'+'<em>', data)
-				data = data.replace(' </em>', '</em> ')									
-				data = data.replace(' </strong> ', '</strong> ')
-				#bold separated from punctuation by space
-				data = re.sub(' (</strong>[,.?!])', r'\1', data)
-				data = re.sub('(</strong> [,.?!])', r'\1', data)
-				data = re.sub('(["“”]) <strong>', r'\1'+'<strong>', data)
-				data = data.replace(' </strong>', '</strong> ')	
-				if data.count(' </p>')>0: 
-					log.write("\nend of paragraphs: "+str(data.count(' </p>')))
-				data = data.replace(' </p>', '</p>')
+			if len(entry)<1:
+				pass
+			else:
+				with open(basehtml+'/'+entry, mode='r', encoding='utf8') as f:
+					data = f.read()
+					#scribus.messageBox("message", "Running for file: "+str(entry)+" work count is: "+str(workCount))
+					log.write('\n\nProcessing file: '+str(entry))
+					
+					#remove all tabs, newlines and duplicate spaces
+					#log.write("Removing all linebreaks for processing....")
+					data = data.replace('\t', '')
+					data = data.replace('\n', '')
+					
+					#sometimes our scene break is surrounded by <span></span>. We need to axe those so we can get rid of the sdans, which otherwise mess up our italic spacing correction
+					#EDIT POINT
+					for b in scenebreakList:
+						if b.find('<span>')>1:
+							nospanbreak = b.replace('span>', 'p>')
+							data = data.replace(b, nospanbreak)
+							scenebreakList.remove(b)
+							scenebreakList.append(nospanbreak)
+					data = data.replace('<span>', '')
+					data = data.replace('</span>', '')
+					
+					data = re.sub(r'\s{2,}', ' ', data)	
+					data = data.replace('/p> <p>', '/p><p>')
+					data = data.replace('<p>\s<p>', '<p></p>')
+					
+					# swapping italics and bold to a single method for consistency
+					#log.write("\n\nSwapping italics and bolds to a single format for processing...")
+					#log.write("\nSwapping italic to emphasis: "+str(data.count('i>')))
+					data = data.replace('i>', 'em>')
+					#log.write("\nSwapping b to strong: "+str(data.count('<b>')))
+					data = data.replace("<b>", "<strong>")
+					data = data.replace("</b>", "</strong>")
+									
+					log.write("\n\nRemoving/reordering extra spaces...")
+					if data.count(' <em> ')>0 or data.count(' <strong> ')>0: 
+						log.write("\nwhere italic bracketed by spaces: "+str(data.count(' <em> ')))	
+						log.write("\nwhere bold bracketed by spaces: "+str(data.count(' <strong> ')))	
+					data = data.replace(' <em> ', ' <em>')
+					data = data.replace(' <strong> ', ' <strong>')									
+					if data.count('<em> ')>0 or data.count('<strong> ')>0:
+						log.write("\nwhere italic start has internal space: "+str(data.count('<em> ')))
+						log.write("\nwhere bold start has internal space: "+str(data.count('<strong> ')))
+					data = data.replace('<em> ', ' <em>')
+					data = data.replace('<strong> ', ' <strong>')				
+					if data.count(' </em> ')>0 or data.count(' </strong> ')>0:
+						log.write("\nwhere end italic bracketed by spaces: "+str(data.count(' </em> ')))
+						log.write("\nwhere end bold bracketed by spaces: "+str(data.count(' </strong> ')))
+					data = data.replace(' </em> ', '</em> ')
+					#italic separated from punctuation by space
+					data = re.sub(' (</em>[,.?!])', r'\1', data)
+					data = re.sub('</em> ([,.?!])', '</em>'+r'\1', data)
+					data = re.sub('(["“”]) <em>', r'\1'+'<em>', data)
+					data = data.replace(' </em>', '</em> ')									
+					data = data.replace(' </strong> ', '</strong> ')
+					#bold separated from punctuation by space
+					data = re.sub(' (</strong>[,.?!])', r'\1', data)
+					data = re.sub('(</strong> [,.?!])', r'\1', data)
+					data = re.sub('(["“”]) <strong>', r'\1'+'<strong>', data)
+					data = data.replace(' </strong>', '</strong> ')	
+					if data.count(' </p>')>0: 
+						log.write("\nend of paragraphs: "+str(data.count(' </p>')))
+					data = data.replace(' </p>', '</p>')
 
 
-				#now that we've reordered the italic and bold we might have errant spaces, fix those
-				#log.write("start of paragraphs: ", data.count('<p> <'))
-				data = re.sub('<p>\s<', '<p><', data)	
-				#log.write("end of paragraphs: ", data.count(' </p>'))
-				data = re.sub('\s</p>', '</p>', data)
+					#now that we've reordered the italic and bold we might have errant spaces, fix those
+					#log.write("start of paragraphs: ", data.count('<p> <'))
+					data = re.sub('<p>\s<', '<p><', data)	
+					#log.write("end of paragraphs: ", data.count(' </p>'))
+					data = re.sub('\s</p>', '</p>', data)
 
-				#only useful if the fic had used headers for something and we're going to fuck it up via formatting whooops
-				if data.count('</h3>')>0 or data.count('</h4>')>0 or data.count('</h5>')>0:
-					log.write("\n\nThese headers will be replaced by the script to use to mark chapters, chapter breaks, and scene breaks.\nIf these headers were already in use you may lose formatting from the author. Check if count>0")
-					log.write("\nh3: "+str(data.count('</h3>')))
-					log.write("\nh4: "+str(data.count('</h4>')))
-					log.write("\nh5: "+str(data.count('</h5>')))		
+					#only useful if the fic had used headers for something and we're going to fuck it up via formatting whooops
+					if data.count('</h3>')>0 or data.count('</h4>')>0 or data.count('</h5>')>0:
+						log.write("\n\nThese headers will be replaced by the script to use to mark chapters, chapter breaks, and scene breaks.\nIf these headers were already in use you may lose formatting from the author. Check if count>0")
+						log.write("\nh3: "+str(data.count('</h3>')))
+						log.write("\nh4: "+str(data.count('</h4>')))
+						log.write("\nh5: "+str(data.count('</h5>')))		
 
-				#Removing chapter notes
-				data = re.sub('(<h2 class="heading">.*?</h2>).*?<!--chapter content-->', r'\1', data)
-				data = re.sub('</div><!--/chapter content-->.*?<h2 class="heading">', '<h2 class="heading">', data)
-				data = re.sub('<div id="afterword">.*?</body>', '</body>', data)
-				data = re.sub('</div><!--/chapter content-->.*?</body>', '</body>', data)
-				data = re.sub('<h2.*?>', '<h2>', data)
+					#Removing chapter notes
+					data = re.sub('(<h2 class="heading">.*?</h2>).*?<!--chapter content-->', r'\1', data)
+					data = re.sub('</div><!--/chapter content-->.*?<h2 class="heading">', '<h2 class="heading">', data)
+					data = re.sub('<div id="afterword">.*?</body>', '</body>', data)
+					data = re.sub('</div><!--/chapter content-->.*?</body>', '</body>', data)
+					data = re.sub('<h2.*?>', '<h2>', data)
 
-				#remove more top matter
-				#keep tags version
-				title = data[data.find('<h1>')+4:data.find('</h1>')]
-				data = re.sub('<div class="byline">by <a.*?href=".*?>', '<BYLINE>', data)
-				data = re.sub('<BYLINE>(.*?)</a>', r'<BYLINE>\1</BYLINE>', data)
-				author = data[data.find('<BYLINE>')+8:data.find('</BYLINE>')]
-				 
-				
-				data = data.replace('<dt>', '<p>')
-				data = data.replace('</dd>', '</p>')
-				data = data.replace("<dd>", "")
-				data = data.replace("</dt>", "")	
-				data = data.replace("</dl>", "")
-				data = re.sub('<p>Notes</p>.*?<div class="meta group">', "", data)
-				data = data.replace('<div class="meta"> <dl class="tags">', "")
-				data = re.sub('(<p>Summary</p>.*?)</blockquote>', r'\1', data)
-				data = data.replace('<blockquote class="userstuff">', "")
-				data = data.replace('<div class="userstuff">', "")
-				data = re.sub('<BYLINE>(.*?)</div>', r'<h1>\1</h1>', data)
-				data = re.sub('<div id="preface">.*?</h2>', "", data)
-				data = data.replace('<p class="message">', '<p>')
+					#remove more top matter
+					#keep tags version
+					title = data[data.find('<h1>')+4:data.find('</h1>')]
+					data = re.sub('<div class="byline">by <a.*?href=".*?>', '<BYLINE>', data)
+					data = re.sub('<BYLINE>(.*?)</a>', r'<BYLINE>\1</BYLINE>', data)
+					author = data[data.find('<BYLINE>')+8:data.find('</BYLINE>')]
+					 
+					
+					data = data.replace('<dt>', '<p>')
+					data = data.replace('</dd>', '</p>')
+					data = data.replace("<dd>", "")
+					data = data.replace("</dt>", "")	
+					data = data.replace("</dl>", "")
+					data = re.sub('<p>Notes</p>.*?<div class="meta group">', "", data)
+					data = data.replace('<div class="meta"> <dl class="tags">', "")
+					data = re.sub('(<p>Summary</p>.*?)</blockquote>', r'\1', data)
+					data = data.replace('<blockquote class="userstuff">', "")
+					data = data.replace('<div class="userstuff">', "")
+					data = re.sub('<BYLINE>(.*?)</div>', r'<h1>\1</h1>', data)
+					data = re.sub('<div id="preface">.*?</h2>', "", data)
+					data = data.replace('<p class="message">', '<p>')
 
-				#remove links from tags
-				data = re.sub('<a.*?href=".*?>', '', data)
-				data = data.replace('</a>, ', ', ')
-				data = data.replace('</a>', '')
-				data = data.replace('&#39;', "’")
+					#remove links from tags
+					data = re.sub('<a.*?href=".*?>', '', data)
+					data = data.replace('</a>, ', ', ')
+					data = data.replace('</a>', '')
+					data = data.replace('&#39;', "’")
 
-				#save topmatter before messing with dashes/quotation marks
-				topmatter_index = data.find('<h2>')
-				tagdata = data[:topmatter_index]
-				tagdata = re.sub('<!DOCTYPE.*?<p>Rating:', '<p>Rating:', tagdata)
-				tagdata = tagdata[:tagdata.find('<h1>')]
-				tagdata = tagdata.replace(' <p>Stats:  Published: ', ' <p>First Published: ')
-				tagdata = tagdata.replace(' Updated: ', '</p> <p>Last Updated: ')
-				tagdata = tagdata.replace(' Words: ', '</p> <p>Words: ')
-				tagdata = tagdata.replace(' Chapters: ', '</p> <p>Chapters: ')
-				tagdata = re.sub('Chapters: .*?/', 'Chapters: ', tagdata)
-				tagdata = re.sub('Series: Part (\d*) of', r'Series: Part \1 of ', tagdata)
-				tagdata = tagdata.replace('</p> <p>', '</p>\n<p>')
-				meta.write('<p>'+title+'</p>\n')
-				if multiAuthor == True:
-					meta.write('<p>'+author+'</p>\n')
-				elif workCount < 2:
-					meta.write('<p>'+author+'</p>\n')
-				#meta.write(author+'\n')
-				meta.write(tagdata)
-				data = data[topmatter_index:]
+					#save topmatter before messing with dashes/quotation marks
+					topmatter_index = data.find('<h2>')
+					tagdata = data[:topmatter_index]
+					tagdata = re.sub('<!DOCTYPE.*?<p>Rating:', '<p>Rating:', tagdata)
+					tagdata = tagdata[:tagdata.find('<h1>')]
+					tagdata = tagdata.replace(' <p>Stats:  Published: ', ' <p>First Published: ')
+					tagdata = tagdata.replace(' Updated: ', '</p> <p>Last Updated: ')
+					tagdata = tagdata.replace(' Words: ', '</p> <p>Words: ')
+					tagdata = tagdata.replace(' Chapters: ', '</p> <p>Chapters: ')
+					tagdata = re.sub('Chapters: .*?/', 'Chapters: ', tagdata)
+					tagdata = re.sub('Series: Part (\d*) of', r'Series: Part \1 of ', tagdata)
+					tagdata = tagdata.replace('</p> <p>', '</p>\n<p>')
+					meta.write('<p>'+title+'</p>\n')
+					if multiAuthor == True:
+						meta.write('<p>'+author+'</p>\n')
+					elif workCount < 2:
+						meta.write('<p>'+author+'</p>\n')
+					#meta.write(author+'\n')
+					meta.write(tagdata)
+					data = data[topmatter_index:]
 
-						
-				
-				#swap all dashes in fic for the selected dash newDash
-				if not LeaveDashesAlone:
-					log.write('\nAutomatically converting dashes to'+newDash)
-					log.write('\nAuthor used the following dashes:')
-					log.write("\nEm dash: "+str(data.count('—')))
-					log.write("\nSpaced em dash: "+str(data.count(' — ')))
-					log.write("\nEn dash: "+str(data.count('–')))
-					log.write("\nSpaced en dash: "+str(data.count(' – ')))
-					log.write("\nSpaced hyphens: "+str(data.count(' - ')))
-					log.write("\nDoubled hyphens: "+str(data.count('--')))
-					data = data.replace('--', newDash)
-					data = data.replace(' — ', newDash)
-					data = data.replace('—', newDash)
-					data = data.replace('<strong>–</strong>', '–')
-					data = data.replace(' - ', newDash)
-					data = data.replace(' -', newDash)
-					data = data.replace('- ', newDash)
-					data = data.replace(' – ', newDash)
-					data = data.replace(' –', newDash)
-					data = data.replace('– ', newDash)
-					data = data.replace('–', newDash)
-				
-				#swap ... to elipsis
-				data = data.replace('...', '…')
-				data = data.replace('. . .', '…')
+							
+					
+					#swap all dashes in fic for the selected dash newDash
+					if not LeaveDashesAlone:
+						log.write('\nAutomatically converting dashes to'+newDash)
+						log.write('\nAuthor used the following dashes:')
+						log.write("\nEm dash: "+str(data.count('—')))
+						log.write("\nSpaced em dash: "+str(data.count(' — ')))
+						log.write("\nEn dash: "+str(data.count('–')))
+						log.write("\nSpaced en dash: "+str(data.count(' – ')))
+						log.write("\nSpaced hyphens: "+str(data.count(' - ')))
+						log.write("\nDoubled hyphens: "+str(data.count('--')))
+						data = data.replace('--', newDash)
+						data = data.replace(' — ', newDash)
+						data = data.replace('—', newDash)
+						data = data.replace('<strong>–</strong>', '–')
+						data = data.replace(' - ', newDash)
+						data = data.replace(' -', newDash)
+						data = data.replace('- ', newDash)
+						data = data.replace(' – ', newDash)
+						data = data.replace(' –', newDash)
+						data = data.replace('– ', newDash)
+						data = data.replace('–', newDash)
+					
+					#swap ... to elipsis
+					data = data.replace('...', '…')
+					data = data.replace('. . .', '…')
 
-				#One more shot at removing bonus spaces
-				data = data.replace(' </p>', '</p>') 
-				data = data.replace('<p> ', '<p>')
-				data = data.replace('<h3> ', '<h3>')
-				data = data.replace('<h4> ', '<h4>')
-				
-				#remove all breaks. If the author is using them as scene breaks, this will...break things. Otherwise this clears out extra unneeded spaces
-				if not keepBr:
-					data = re.sub('<br.*?>', '', data)
-					data = data.replace('<br>', '')
+					#One more shot at removing bonus spaces
+					data = data.replace(' </p>', '</p>') 
+					data = data.replace('<p> ', '<p>')
+					data = data.replace('<h3> ', '<h3>')
+					data = data.replace('<h4> ', '<h4>')
+					
+					#remove all breaks. If the author is using them as scene breaks, this will...break things. Otherwise this clears out extra unneeded spaces
+					if not keepBr:
+						data = re.sub('<br.*?>', '', data)
+						data = data.replace('<br>', '')
 
-				#find and replace multiple paragraph breaks in a row, either deleting them if the fic is double spaced or treating them as scene breaks
-				data = re.sub('(<p></p>){2,}', minibreak, data) #if double spaces are used as extra breaks, replace. This will not work for authors with double spaces between every line, or who have extra spaces above and below normal breaks
-				data = data.replace('</p><p></p><p>', '</p>'+minibreak+'<p>')
-				data = data.replace('<p></p>', '')
-				
-				#replace scene breaks and make scene starts <h5>		
-				#log.write("\n\nReplacing fic scene breaks with selected breakCharacter: "+breakcharacter)
-				data = re.sub('<hr.*?>', '<hr>', data)
-				for b in scenebreakList:
-					data = data.replace(b, newbreak)
-				data = data.replace( newbreak+minibreak, newbreak) #if they've double spaced before or after their breaks fix
-				data = data.replace( minibreak+newbreak, newbreak) #if they've double spaced before or after their breaks fix
-				data = data.replace('</h5><p>', '</h5><h4>')
-				data = re.sub('(<h4>.*?)</p>', r'\1</h4>', data)
-				#log.write("\nTurning the first paragraph after each scene break to <h4>")
-				if ornamentAllBreaks:
-					data = data.replace(minibreak, newbreak)
-					#log.write("\nBecause OrnamentAllBreaks=True, double paragraph spaces swapped to our ornament symbol glyph")
-				else:
-					data = data.replace(minibreak, minispacebreak)
-					#log.write("\nBecause OrnamentAllBreaks=False, double paragraph spaces swapped to a ornament-styled blank line")
+					#find and replace multiple paragraph breaks in a row, either deleting them if the fic is double spaced or treating them as scene breaks
+					data = re.sub('(<p></p>){2,}', minibreak, data) #if double spaces are used as extra breaks, replace. This will not work for authors with double spaces between every line, or who have extra spaces above and below normal breaks
+					data = data.replace('</p><p></p><p>', '</p>'+minibreak+'<p>')
+					data = data.replace('<p></p>', '')
+					
+					#replace scene breaks and make scene starts <h5>		
+					#log.write("\n\nReplacing fic scene breaks with selected breakCharacter: "+breakcharacter)
+					data = re.sub('<hr.*?>', '<hr>', data)
+					for b in scenebreakList:
+						data = data.replace(b, newbreak)
+					data = data.replace( newbreak+minibreak, newbreak) #if they've double spaced before or after their breaks fix
+					data = data.replace( minibreak+newbreak, newbreak) #if they've double spaced before or after their breaks fix
+					data = data.replace('</h5><p>', '</h5><h4>')
+					data = re.sub('(<h4>.*?)</p>', r'\1</h4>', data)
+					#log.write("\nTurning the first paragraph after each scene break to <h4>")
+					if ornamentAllBreaks:
+						data = data.replace(minibreak, newbreak)
+						#log.write("\nBecause OrnamentAllBreaks=True, double paragraph spaces swapped to our ornament symbol glyph")
+					else:
+						data = data.replace(minibreak, minispacebreak)
+						#log.write("\nBecause OrnamentAllBreaks=False, double paragraph spaces swapped to a ornament-styled blank line")
 
-				#Making chapter start paragraphs <h3>
-				#log.write("\nTurning the first paragraph after each chapter to <h3>")
-				data = data.replace('</h2>\s*?<p>', '</h2><h3>')
-				data = re.sub('(<h3>.*?)</p>', r'\1</h3>', data)
+					#Making chapter start paragraphs <h3>
+					#log.write("\nTurning the first paragraph after each chapter to <h3>")
+					data = data.replace('</h2>\s*?<p>', '</h2><h3>')
+					data = re.sub('(<h3>.*?)</p>', r'\1</h3>', data)
 
-				
-				#for text that doesn't have typographic quotes
-				if not LeaveQuotesAlone:
-					#log.write("\nAutomatically correcting typographic quotes - keep alert for quotation mark errors in typeset")
-					data = data.replace('&ldquo;', '"') #swap out any errant html code formats instead of glyphs
-					data = data.replace('&rdquo;', '"')
-					data = data.replace('&quot;', '"')
-					data = data.replace('&apos;', "'")
-					data = data.replace('&lsquo;', "'")
-					data = data.replace('&rsquo;', "'")
-					data = data.replace('"', "”")
-					data = data.replace('"', "”")
-					data = data.replace('<p>”', '<p>“') #quote at start of paragraph is opener
-					data = data.replace('<em>”', '<em>“') #quote after em is opener
-					data = data.replace('<strong>”', '<strong>“') #quote after bold is opener
-					data = re.sub('(\s)”', r'\1“', data) #quote after space is opener
-					data = data.replace("'", "’")
-					data = data.replace("<p>’", "<p>‘") #quote at start of paragraph is opener
-					data = data.replace("<em>’", "<em>‘") #quote at start of paragraph is opener
-					data = data.replace("<strong>’", "<strong>‘") #quote at start of paragraph is opener
-					data = re.sub("(\s)’", r"\1‘", data) #quote after space is opener
-					#apostrophe exceptions
-					data = re.sub("‘([e,E]m\W)", r"’\1", data) #'em
-					data = re.sub("‘([t,T]is\W)", r"’\1", data) #'tis
-					data = re.sub("‘([t,T]was\W)", r"’\1", data) #'twas		
-					data = re.sub("‘([t,T]wixt\W)", r"’\1", data) #'twixt
-					data = re.sub("‘([t,T]il\W)", r"’\1", data) #'til
-					data = re.sub("‘([s,S]cuse\W)", r"’\1", data) #'scuse
-					data = re.sub("‘([r,R]ound\W)", r"’\1", data) #'round
-					data = re.sub("‘([c,C]ause\W)", r"’\1", data)	
-					data = re.sub("‘([m,M]\W)", r"’\1", data)	
-					data = re.sub("‘(\d)", r"’\1", data) #year abbreviations
+					
+					#for text that doesn't have typographic quotes
+					if not LeaveQuotesAlone:
+						#log.write("\nAutomatically correcting typographic quotes - keep alert for quotation mark errors in typeset")
+						data = data.replace('&ldquo;', '"') #swap out any errant html code formats instead of glyphs
+						data = data.replace('&rdquo;', '"')
+						data = data.replace('&quot;', '"')
+						data = data.replace('&apos;', "'")
+						data = data.replace('&lsquo;', "'")
+						data = data.replace('&rsquo;', "'")
+						data = data.replace('"', "”")
+						data = data.replace('"', "”")
+						data = data.replace('<p>”', '<p>“') #quote at start of paragraph is opener
+						data = data.replace('<em>”', '<em>“') #quote after em is opener
+						data = data.replace('<strong>”', '<strong>“') #quote after bold is opener
+						data = re.sub('(\s)”', r'\1“', data) #quote after space is opener
+						data = data.replace("'", "’")
+						data = data.replace("<p>’", "<p>‘") #quote at start of paragraph is opener
+						data = data.replace("<em>’", "<em>‘") #quote at start of paragraph is opener
+						data = data.replace("<strong>’", "<strong>‘") #quote at start of paragraph is opener
+						data = re.sub("(\s)’", r"\1‘", data) #quote after space is opener
+						#apostrophe exceptions
+						data = re.sub("‘([e,E]m\W)", r"’\1", data) #'em
+						data = re.sub("‘([t,T]is\W)", r"’\1", data) #'tis
+						data = re.sub("‘([t,T]was\W)", r"’\1", data) #'twas		
+						data = re.sub("‘([t,T]wixt\W)", r"’\1", data) #'twixt
+						data = re.sub("‘([t,T]il\W)", r"’\1", data) #'til
+						data = re.sub("‘([s,S]cuse\W)", r"’\1", data) #'scuse
+						data = re.sub("‘([r,R]ound\W)", r"’\1", data) #'round
+						data = re.sub("‘([c,C]ause\W)", r"’\1", data)	
+						data = re.sub("‘([m,M]\W)", r"’\1", data)	
+						data = re.sub("‘(\d)", r"’\1", data) #year abbreviations
 
-				#get list of proper nouns & potential problem em and strong fragments for this work
-				nounlist = re.findall(r'[a-z] ([A-Z]\w*)', data)
-				comboNounList += nounlist
-				emlist = re.findall(r'<em>.{1,2}</em>', data)
-				comboItalicList += emlist
-				stronglist = set(re.findall(r'<strong>.{1,2}</strong>', data))
-				comboItalicList += stronglist
-		
-				
-				#put all the line breaks back
-				#log.write("Replacing line breaks: ")
-				data = data.replace('</p>', '</p>\n')
-				data = data.replace('<h1>', '\n\n<h1>') #spaces above fic title to make them easier to see (in case you combine documents for an anthology later)
-				data = data.replace('</h1>', '</h1>\n')
-				data = data.replace('<h2>', '\n\n<h2>') #spaces above chapters to make them easier to see
-				data = data.replace('</h2>', '</h2>\n')
-				data = data.replace('</h3>', '</h3>\n')
-				data = data.replace('</h4>', '</h4>\n')
-				data = data.replace('</h5>', '</h5>\n')
-				data = data.replace('</blockquote>', '</blockquote>\n')
-				
-				#remove /body/html at end of each work
-				data = data[:data.find('</body></html>')]
-				
-				title = '<h1>'+title+'</h1>'
-				author = '<h6>'+author+'</h6>'
-				anthology.write(title+'\n')
-				if multiAuthor == True:
-					anthology.write(author+'\n')
-				elif workCount < 2:
-					anthology.write(author+'\n')
-				#anthology.write(author+'\n')
-				anthology.write(data)
-				meta.write('\n\n')
-				workCount += 1
+					#get list of proper nouns & potential problem em and strong fragments for this work
+					nounlist = re.findall(r'[a-z] ([A-Z]\w*)', data)
+					comboNounList += nounlist
+					emlist = re.findall(r'<em>.{1,2}</em>', data)
+					comboItalicList += emlist
+					stronglist = set(re.findall(r'<strong>.{1,2}</strong>', data))
+					comboItalicList += stronglist
+			
+					
+					#put all the line breaks back
+					#log.write("Replacing line breaks: ")
+					data = data.replace('</p>', '</p>\n')
+					data = data.replace('<h1>', '\n\n<h1>') #spaces above fic title to make them easier to see (in case you combine documents for an anthology later)
+					data = data.replace('</h1>', '</h1>\n')
+					data = data.replace('<h2>', '\n\n<h2>') #spaces above chapters to make them easier to see
+					data = data.replace('</h2>', '</h2>\n')
+					data = data.replace('</h3>', '</h3>\n')
+					data = data.replace('</h4>', '</h4>\n')
+					data = data.replace('</h5>', '</h5>\n')
+					data = data.replace('</blockquote>', '</blockquote>\n')
+					
+					#remove /body/html at end of each work
+					data = data[:data.find('</body></html>')]
+					
+					title = '<h1>'+title+'</h1>'
+					author = '<h6>'+author+'</h6>'
+					anthology.write(title+'\n')
+					if multiAuthor == True:
+						anthology.write(author+'\n')
+					elif workCount < 2:
+						anthology.write(author+'\n')
+					#anthology.write(author+'\n')
+					anthology.write(data)
+					meta.write('\n\n')
+					workCount += 1
 			
 		anthology.write('</body></html>')
 		meta.write('</body></html>')	
